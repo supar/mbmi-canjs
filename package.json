@@ -1,0 +1,12 @@
+{
+    "name": "mail-admin",
+    "version": "0.0.1",
+    "description": "",
+    "main": "@empty",
+    "dependencies": { }, 
+    "scripts": {
+        "clear": "node -e 'require(\"./scripts/build.js\").clear(\"build\")'",
+        "build": "npm run clear && node -e 'require(\"./scripts/build.js\").build()'",
+        "export": "npm run clear && node -e 'require(\"./scripts/build.js\").export()'"
+    }
+}
