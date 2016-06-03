@@ -3,10 +3,14 @@
     "version": "0.0.1",
     "description": "",
     "main": "@empty",
-    "dependencies": { }, 
+    "dependencies": { },
+    "ignore": [
+        "node_modules"
+    ],
     "scripts": {
         "clear": "node -e 'require(\"./scripts/build.js\").clear(\"build\")'",
-        "build": "npm run clear && node -e 'require(\"./scripts/build.js\").build()'",
+        "build": "npm run clear && node -e 'var a = require(\"./scripts/build.js\"); a.build()'",
+        "server": "node -e 'var a = require(\"./scripts/utils.js\"); a.runServer(\"build/bundles\")'",
         "export": "npm run clear && node -e 'require(\"./scripts/build.js\").export()'"
     }
 }
