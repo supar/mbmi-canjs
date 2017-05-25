@@ -3,9 +3,9 @@ steal(
     "can/util/fixture", 
 function(fixture) {
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1@domain.com", pass: "123", auth_key: "asdfqwerdzsflkewu-1" },
-            { id: 2, name: "Менеджер 2", login: "some_2@domain.com", pass: "123", auth_key: "asdfqwerdzsflkewu-2" },
-            { id: 3, name: "Менеджер 3", login: "some_3@domain.com", pass: "123", auth_key: "asdfqwerdzsflkewu-3" },
+            { id: 1, name: "Менеджер 1", login: "some_1@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-1" },
+            { id: 2, name: "Менеджер 2", login: "some_2@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-2" },
+            { id: 3, name: "Менеджер 3", login: "some_3@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-3" },
         ],
 
         accessData = [
@@ -69,7 +69,6 @@ function(fixture) {
 
                 for(var i in loginData) {
                     if(loginData[i].login == data['email'] && loginData[i].pass == data['password']) {
-                        setCookie('authsess', i);
                         authSess = loginData[i];
                         break;
                     }
@@ -92,8 +91,8 @@ function(fixture) {
             }
 
         },
-        'DELETE user/login/{id}': function(request, response) {
-            setCookie('authsess', '');
+        'DELETE user/logout': function(request, response) {
+            sessionStorage.removeItem('authkey');
             response(401);
         },
         'GET accesses': function(request, response) {
@@ -240,13 +239,15 @@ function(fixture) {
     });
 
     function Authorize() {
-        var auth = getCookie('authsess');
+        var authkey = sessionStorage.getItem('authkey');
 
-        if(typeof auth == undefined || !loginData[auth]) {
-            return false;
+        for(var i in loginData) {
+            if(loginData[i].auth_token == authkey) {
+                return loginData[i];
+            }
         }
 
-        return loginData[auth]
+        return false;
     }
 
     function AuthError(msg) {
