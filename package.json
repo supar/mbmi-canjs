@@ -12,6 +12,6 @@
         "build": "npm run clear && node -e 'var a = require(\"./scripts/build.js\"); a.build()'",
         "server": "node -e 'var a = require(\"./scripts/utils.js\"); a.runServer(\"build/bundles\")'",
         "export": "npm run clear && node -e 'require(\"./scripts/build.js\").export()'",
-	"sass": "node-sass --version"
+        "sass": "node-sass --version"
     }
 }
