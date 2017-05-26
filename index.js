@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import 'bootstrap';
+import 'less/application.less!';
+import 'less/responsive.less!';
 
 steal(
     'components/application.js',
@@ -9,8 +11,6 @@ steal(
     //!steal-remove-start
     'models/fixtures/fixtures.js',
     //!steal-remove-end
-    'less/application.less!',
-    'less/responsive.less!',
 function(App){
     window.App = new App($(window));
     window.App.run();

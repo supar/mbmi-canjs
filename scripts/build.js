@@ -1,39 +1,44 @@
 var fs = require('fs');
+var path = require("path");
 var utils = require('./utils');
 var stealTools = require('steal-tools');
 
+var project = path.basename(path.dirname(__dirname));
+
 var build = function() {
-    stealTools.build({
-        main: "mail-admin/index",
-        config: __dirname + "/../../config.js",
-        bundlesPath: "mail-admin/build/bundles",
-        npmAlgorithm: "flat",
-        map: {
-            "mail-admin/index": "index",
-            "mail-admin/components": "components",
-            "mail-admin/models": "models",
-            "mail-admin/views": "views",
+    var config = {
+            main: path.join(project, 'index'),
+            config: __dirname + "/../../config.js",
+            bundlesPath: path.join(project, '/build/bundles'),
+            npmAlgorithm: "flat",
+            map: {},
+            paths: {
+                "index": path.join(project, 'index.js'),
+                "components/*": path.join(project, 'components', '*.js'),
+                "models/*": path.join(project, 'models', '*.js'),
+                "models/auth": path.join(project, 'models', 'auth', '*.js'),
+                "views/*": path.join(project, 'views', '*.js'),
+                "less/*": path.join(project, 'less', '*')
+            },
+            meta: {
+                "models/fixtures": {
+                    "bundle": false
+                }
+            },
+            bundle: [
+                "components/application",
+                "components/authenticate",
+                "components/access-panel",
+                "components/spam-panel"
+            ]
         },
-        paths: {
-            "index": "mail-admin/index.js",
-            "components/*": "mail-admin/components/*.js",
-            "models/*": "mail-admin/models/*.js",
-            "models/auth": "mail-admin/models/auth/*.js",
-            "views/*": "mail-admin/views/*.js",
-            "less/*": "mail-admin/less/*"
-        },
-        meta: {
-            "models/fixtures/fixtures": {
-                "bundle": false
-            }
-        },
-        bundle: [
-            "components/application",
-            "components/authenticate",
-            "components/access-panel",
-            "components/spam-panel"
-        ]
-    }, {
+        map = ['index', 'components', 'models', 'views'];
+
+    for(var i in map) {
+        config.map[path.join(project, map[i])] = map[i];
+    }
+
+    stealTools.build(config, {
         minify: true,
         debug: true,
         quiet: false,
