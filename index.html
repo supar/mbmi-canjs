@@ -7,9 +7,16 @@
 	<body>
 		<div id="main-wrap" class="main hidden"></div>
         <div id="auth-wrap" class="main mask hidden"></div>
+        <script type='text/javascript'>
+            var loc = window.location.pathname.split('/').filter(function(n) {
+                    return (n);
+                }),
+                steal = {};
+
+            steal.main = loc.concat('index').join('/');
+        </script>
         <script type='text/javascript' 
             src='/libs/steal/steal.js'
-            main="mail-admin/index"
             data-config-path='../config.js'
             data-bower-path="../libs"
             data-env="development"
@@ -18,9 +25,9 @@
         <script type="text/javascript">
             System.config({
                 map: {
-                    "components": "mail-admin/components",
-                    "less": "mail-admin/less",
-                    "models": "mail-admin/models"
+                    "components": loc.concat('components').join('/'),
+                    "less": loc.concat('less').join('/'),
+                    "models": loc.concat('models').join('/')
                 }
             });
         </script>
