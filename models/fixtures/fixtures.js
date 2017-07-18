@@ -3,9 +3,9 @@ steal(
     "can/util/fixture", 
 function(fixture) {
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-1" },
-            { id: 2, name: "Менеджер 2", login: "some_2@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-2" },
-            { id: 3, name: "Менеджер 3", login: "some_3@domain.com", pass: "123", auth_token: "asdfqwerdzsflkewu-3" },
+            { id: 1, name: "Менеджер 1", login: "some_1@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-1" },
+            { id: 2, name: "Менеджер 2", login: "some_2@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-2" },
+            { id: 3, name: "Менеджер 3", login: "some_3@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-3" },
         ],
 
         accessData = [
@@ -22,27 +22,37 @@ function(fixture) {
         ],
 
         spamData = [
-                { client: "193.200.211.254", ip: "193.200.211.254", from: "rea@vit-net.ru", score: 1, index: 0.024690087971667385 },
-                { client: "cannibalk1@gmail.com", ip: "88.250.181.166", from: "cannibalk1@gmail.com", score: 1, index: 0.024690087971667385 },
-                { client: "105.225.155.9", ip: "105.225.155.9", from: "pottierh0032@googlemail.com", score: 1, index: 0.024690087971667385 },
-                { client: "yjmosmd@bizneroa.co.ua", ip: "85.25.13.120", from: "yjmosmd@bizneroa.co.ua", score: 1, index: 0.024690087971667385 },
-                { client: "bogdanov.209@mail.ru", ip: "114.38.27.184", from: "bogdanov.209@mail.ru", score: 1, index: 0.024690087971667385 },
-                { client: "wgrovsflieukvoy@narod.ru", ip: "31.24.30.98", from: "wgrovsflieukvoy@narod.ru", score: 1, index: 0.024690087971667385 },
-                { client: "112.158.228.51", ip: "112.158.228.51", from: "info@bucci.org", score: 1, index: 0.024690087971667385 },
-                { client: "ykdownp@holihik.co.ua", ip: "217.172.177.226", from: "ykdownp@holihik.co.ua", score: 1, index: 0.024690087971667385 },
-                { client: "malololopez@aol.com", ip: "178.207.161.114", from: "malololopez@aol.com", score: 1, index: 0.024690087971667385 },
-                { client: "5.141.219.117", ip: "5.141.219.117", from: "unbendingo076@list.ru", score: 1, index: 0.024690087971667385 }
+                { client: "193.200.211.254", ip: "193.200.211.254", from: "rea@vit-net.ru", attempt: 1, index: 0.024690087971667385 },
+                { client: "cannibalk1@gmail.com", ip: "88.250.181.166", from: "cannibalk1@gmail.com", attempt: 1, index: 0.024690087971667385 },
+                { client: "105.225.155.9", ip: "105.225.155.9", from: "pottierh0032@googlemail.com", attempt: 1, index: 0.024690087971667385 },
+                { client: "yjmosmd@bizneroa.co.ua", ip: "85.25.13.120", from: "yjmosmd@bizneroa.co.ua", attempt: 1, index: 0.024690087971667385 },
+                { client: "bogdanov.209@mail.ru", ip: "114.38.27.184", from: "bogdanov.209@mail.ru", attempt: 1, index: 0.024690087971667385 },
+                { client: "wgrovsflieukvoy@narod.ru", ip: "31.24.30.98", from: "wgrovsflieukvoy@narod.ru", attempt: 1, index: 0.024690087971667385 },
+                { client: "112.158.228.51", ip: "112.158.228.51", from: "info@bucci.org", attempt: 1, index: 0.024690087971667385 },
+                { client: "ykdownp@holihik.co.ua", ip: "217.172.177.226", from: "ykdownp@holihik.co.ua", attempt: 1, index: 0.024690087971667385 },
+                { client: "malololopez@aol.com", ip: "178.207.161.114", from: "malololopez@aol.com", attempt: 1, index: 0.024690087971667385 },
+                { client: "5.141.219.117", ip: "5.141.219.117", from: "unbendingo076@list.ru", attempt: 1, index: 0.024690087971667385 }
         ];
 
     fixture({
         'GET user/me': function(request, response) {
-            var auth = Authorize();
+            var auth = Authorize(),
+                data = null;
 
             try {
                 if(auth == false) {
                     throw new AuthError();
                 }
 
+                for(var i in loginData) {
+                    if(loginData[i]["jwt"] == auth.jwt) {
+                        data = loginData[i]
+                    }
+                }
+
+                if(data == null) {
+                    throw new AuthError()
+                }
                 response(200, {
                     success: true,
                     data: auth
@@ -53,7 +63,7 @@ function(fixture) {
                 });
             }
         },
-        'PUT user/login': function(request, response) {
+        'PUT login': function(request, response) {
             var data = request.data,
                 auth = getCookie('authsess'),
                 authSess;
@@ -227,7 +237,7 @@ function(fixture) {
             }
 
         },
-        'GET spammers': function(request, response) {
+        'GET spam': function(request, response) {
             var start = request.data.offset || 0,
                 end = start + (request.data.limit || data.length);
 
@@ -242,7 +252,7 @@ function(fixture) {
         var authkey = sessionStorage.getItem('authkey');
 
         for(var i in loginData) {
-            if(loginData[i].auth_token == authkey) {
+            if(loginData[i].jwt == authkey) {
                 return loginData[i];
             }
         }
