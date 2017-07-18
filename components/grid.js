@@ -8,7 +8,7 @@ function(can) {
         tag: 'grid',
         template: can.stache([
             '<div class="{{^if gridVisible}}hidden{{/if}}">',
-            '<table class="table "><tbody><content/></tbody></table>',
+            '<table class="table table-data"><tbody><content/></tbody></table>',
             '<pager {paginate}="paginate" />',
             '</div>'
         ].join('')),
