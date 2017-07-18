@@ -3,7 +3,6 @@ steal(
     'can/component',
     'can/map/define',
     'can/view/stache',
-    '../less/authorize.less!',
 function() {
     can.Component.extend({
         tag: 'view-auth',
