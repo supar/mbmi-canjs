@@ -21,7 +21,7 @@ function(Component, Model) {
                     '<td>{{client}}</td>',
                     '<td>{{from}}</td>',
                     '<td>{{ip}}</td>',
-                    '<td>{{spam_victims_score}}</td>',
+                    '<td>{{attempt}}</td>',
                     '<td>{{indexRound}}</td>',
                 '</tr>',
             '{{/each}}',

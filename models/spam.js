@@ -5,7 +5,7 @@ steal(
     'can/map/define',
 function(can, Paginate, Model) {
     var Store = Model.extend({
-        findAll: 'GET spammers'
+        findAll: 'GET spam'
     }, {});
     
     return can.Map.extend({
