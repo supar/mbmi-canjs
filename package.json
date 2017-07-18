@@ -2,15 +2,39 @@
     "name": "mbmi-canjs",
     "version": "0.0.1",
     "description": "",
-    "main": "@empty",
-    "dependencies": { },
-    "ignore": [
-        "node_modules"
-    ],
+    "main": "index.js",
+    "dependencies": {
+        "jquery": "3.2.1",
+        "bootstrap": "3.3.7",
+        "can": "2.3.31",
+        "steal": "^1.5.5"
+    },
+    "devDependencies": {
+        "steal-tools": "^1.6.0",
+        "steal-css": "1.2.5",
+        "steal-less": "1.2.0"
+    },
+    "steal": {
+        "bundle": [
+            "components/application",
+            "components/authenticate",
+            "components/access-panel",
+            "components/spam-panel"
+        ],
+        "meta": {
+            "models/fixtures": {
+                "bundle": false
+            },
+            "bootstrap": {
+                "deps":[ "bootstrap/dist/css/bootstrap.css" ]
+            }
+        },
+        "plugins": ["steal-css", "steal-less"]
+    },
     "scripts": {
         "clear": "node -e 'require(\"./scripts/build.js\").clear(\"build\")'",
-        "build": "npm run clear && node -e 'var a = require(\"./scripts/build.js\"); a.build()'",
-        "server": "node -e 'var a = require(\"./scripts/utils.js\"); a.runServer(\"build/bundles\")'",
+        "build": "npm run clear && node  -e 'var a = require(\"./scripts/build.js\"); a.build()'",
+        "server": "node  -e 'var a = require(\"./scripts/utils.js\"); a.runServer(\"build/bundles\")'",
         "export": "npm run clear && node -e 'require(\"./scripts/build.js\").export()'",
         "sass": "node-sass --version"
     }
