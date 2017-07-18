@@ -78,11 +78,10 @@ function(Auth, mainView) {
         },
 
         initAuth: function() {
-            var map = new Auth({
-                authenticate: true
-            });
+            var map = new Auth({});
             map.bind('valid', can.proxy(this.state, this));
             map.bind('saveStatus', can.proxy(map.doSave, map));
+            map.attr('authenticate', true);
 
             this.authorize = map;
         },
