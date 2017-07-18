@@ -5,8 +5,8 @@ steal(
 function(can, Model) {
     var Store = Model.extend({
         findOne: 'GET user/me',
-        create: 'PUT user/login',
-        destroy: 'DELETE user/logout'
+        create: 'PUT login',
+        destroy: 'DELETE logout'
     }, {});
 
     return can.Map.extend({
@@ -45,7 +45,7 @@ function(can, Model) {
         Success: function(response) {
             var key;
 
-            if(!(key = response.attr('data.auth_token'))) {
+            if(!(key = response.attr('data.jwt'))) {
                 this.attr('error', 'Invalid auth token');
                 this.attr('valid', false);
 
