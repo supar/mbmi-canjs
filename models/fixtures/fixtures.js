@@ -34,6 +34,11 @@ function(fixture) {
                 { client: "5.141.219.117", ip: "5.141.219.117", from: "unbendingo076@list.ru", attempt: 1, index: 0.024690087971667385 }
         ];
 
+        transportData = [
+            { id: "1", domain: "domain.com", transport: "virtual", rootdir: "/var/mail" },
+            { id: "2", domain: "example.com", transport: "virtual", rootdir: "/var/mail" }
+        ];
+
     fixture({
         'GET user/me': function(request, response) {
             var auth = Authorize(),
@@ -245,7 +250,121 @@ function(fixture) {
                 count: spamData.length,
                 data: spamData.slice(start, end)
             });
-        }
+        },
+        'GET transports': function(request, response) {
+            var start = request.data.offset || 0,
+                end = start + (request.data.limit || data.length);
+
+            response(200, {
+                count: transportData.length,
+                data: transportData.slice(start, end)
+            });
+        },
+        'GET transport/{id}': function(request, response) {
+            var id = request.data.id,
+                item, a;
+
+            for(var i in transportData) {
+                if(a = transportData[i], a.id == id) {
+                    item = a;
+                    break;
+                }
+            }
+
+            if(item) {
+                response(200, {
+                    success: true,
+                    data: item
+                });
+            } else {
+                response(404, {
+                    success: false,
+                    error: 'Unknown item'
+                });
+            }
+        },
+        'POST transport': function(request, response) {
+            var auth = Authorize(),
+                data = request.data,
+                maxId = 0;
+
+            try {
+                if(!auth) {
+                    throw new AuthError();
+                }
+
+                if(!data['domain']) {
+                    throw new RespError('Empty domain value');
+                }
+
+                for(var i in transportData) {
+                    maxId = transportData[i].id > maxId ? transportData[i].id : maxId;
+                }
+                
+                maxId++;
+    
+                transportData.push({
+                    id: maxId,
+                    domain: data['domain'] || '',
+                    transport: data['transport'] || 'virtaul',
+                    rootdir: data['rootdir'] || '/var/mail'
+                });
+            } catch(err) {
+                response(err.code, {
+                    success: false,
+                    error: err.message
+                });
+
+                return;
+            }
+
+            response(200, {
+                success: true
+            });    
+        },
+        'PUT transport/{id}': function(request, response) {
+            var auth = Authorize(),
+                data = request.data,
+                done = false;
+
+            try {
+                if(!auth) {
+                    throw new AuthError();
+                }
+
+                if(!data['id']) {
+                    throw new RespError('Unknown item');
+                }
+
+                for(var i in transportData) {
+                    if(transportData[i].id == data.id) {
+                        transportData[i] = {
+                            id: data['id'],
+                            domain: data['domain'] || transportData[i].domain,
+                            transport: data['transport'] || transportData[i].transport,
+                            rootdir: data['rootdir'] || transportData[i].rootdir
+                        };
+                        done = true;
+                        break;
+                    }
+                }
+
+                if(!done) {
+                    throw new Error('Unknown item');
+                }
+            } catch(err) {
+                response(err.code, {
+                    success: false,
+                    error: err.message
+                });
+
+                return;
+            }
+
+            response(200, {
+                success: true
+            });    
+        },
     });
 
     function Authorize() {

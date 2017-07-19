@@ -4,6 +4,9 @@ function(stache, spamPanel) {
         return stache([
             '<view-navbar {page}="page" />',
             '<section class="main-content">',
+                '<div class="container-fluid card-layout {{^eq page "transport"}}hidden{{/eq}}">',
+                '<transport-panel {page}="page" {page-id}="id">', , '</transport-panel>',
+                '</div>',
                 '<div class="container-fluid card-layout {{^eq page "spam"}}hidden{{/eq}}">',
                 '<spam-panel></spam-panel>',
                 '</div>',
