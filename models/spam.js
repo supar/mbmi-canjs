@@ -16,7 +16,7 @@ function(can, Paginate, Model) {
             paginate: {
                 value: function() {
                     return new Paginate({ 
-                        limit: 5
+                        limit: 50
                     });
                 }
             },
