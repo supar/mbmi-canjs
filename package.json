@@ -19,7 +19,8 @@
             "components/application",
             "components/authenticate",
             "components/access-panel",
-            "components/spam-panel"
+            "components/spam-panel",
+            "components/transport-panel"
         ],
         "meta": {
             "models/fixtures": {
