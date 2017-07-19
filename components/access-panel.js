@@ -91,7 +91,7 @@ function(Component, Model) {
                 model.attr({
                     gridShow: id != null ? false : true
                 });
-            },
+            }
         }
     });
 });
