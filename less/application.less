@@ -44,7 +44,7 @@ a, a:hover, a:focus {
     left: 0;
     right: 0;
     background: #fdfde7;
-    border-bottom: 1px solid #c9aa5f;
+    border-bottom: 4px solid #c9aa5f;
     z-index: 1002;
 }
 
@@ -54,7 +54,7 @@ a, a:hover, a:focus {
     width: 210px;
     height: 100%;
     position: fixed;
-    background: #424a5d;
+    background: rgba(0, 0, 0, .5);
 }
 
 .nav-panel h5 {
@@ -126,7 +126,7 @@ ul.menu-panel li ul.sub li a:hover {
 }
 
 ul.menu-panel li ul.sub li.active a {
-    color: #68dff0;
+    color: #f5f5f5;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
@@ -135,11 +135,8 @@ ul.menu-panel li ul.sub li.active a {
     display: block;
 }
 
-ul.menu-panel li{
-    /*line-height: 20px !important;*/
-    margin-bottom: 5px;
-    margin-left:10px;
-    margin-right:10px;
+ul.menu-panel li {
+    line-height: 20px !important;
 }
 
 ul.menu-panel li.sub-menu{
@@ -162,6 +159,7 @@ ul.menu-panel li a{
     -o-transition: all 0.3s ease;
     -ms-transition: all 0.3s ease;
     transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 ul.menu-panel li a.active, ul.menu-panel li a:hover, ul.menu-panel li a:focus {
@@ -197,6 +195,24 @@ ul.menu-panel li a.active i {
     padding-right: 15px;
     margin-top: 5px;
 }
+
+.nav-panel-right {
+    float: right;
+    overflow: auto;
+    display: inline-block;
+}
+
+.nav-panel-right > div {
+    padding: 9px 10px;
+    margin-top: 8px;
+    font-size: 1.2em;
+}
+
+.nav-panel-client-info > div {
+    margin-right: 7px;
+    font-size: 1.2em;
+}
+
 
 .nav-panel-toggle .menu-toggle {
     cursor: pointer;
