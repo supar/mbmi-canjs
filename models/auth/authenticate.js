@@ -55,6 +55,7 @@ function(can, Model) {
             sessionStorage.setItem('authkey', key);
 
             this.removeAttr('error');
+            this.attr('login', this.attr('login.data'));
             this.attr('valid', true);
 
             if(can.route.attr('page') == 'logout'){
@@ -68,8 +69,9 @@ function(can, Model) {
                     var man = map.attr('data');
 
                     if(man && man['id']) {
+                        this.attr('login', man);
+                        // Kepp last to prevent event
                         this.attr('valid', true);
-                        this.attr('manager', man);
                     }
                 }, this),
                 error = can.proxy(function() {

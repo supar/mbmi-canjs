@@ -3,9 +3,9 @@ steal(
     "can/util/fixture", 
 function(fixture) {
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-1" },
-            { id: 2, name: "Менеджер 2", login: "some_2@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-2" },
-            { id: 3, name: "Менеджер 3", login: "some_3@domain.com", pass: "123", jwt: "asdfqwerdzsflkewu-3" },
+            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1" },
+            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2" },
+            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3" },
         ],
 
         accessData = [
@@ -83,7 +83,7 @@ function(fixture) {
                 }
 
                 for(var i in loginData) {
-                    if(loginData[i].login == data['email'] && loginData[i].pass == data['password']) {
+                    if([loginData[i].login, loginData[i].domainname].join('@') == data['email'] && loginData[i].password == data['password']) {
                         authSess = loginData[i];
                         break;
                     }
