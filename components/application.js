@@ -112,16 +112,9 @@ function(Auth, mainView) {
 
             if(mainEmpty && newValue) {
                 main.append(
-                    mainView(this.routeState, {
-                        email: function() {
-                            if(auth) {
-                                return [
-                                    auth.attr('login.login'),
-                                    auth.attr('login.domainname')
-                                ].join('@')
-                            }
-                            return null
-                        }
+                    mainView({
+                        auth: auth,
+                        route: this.routeState
                     })
                 );
             }
