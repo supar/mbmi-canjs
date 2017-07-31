@@ -36,13 +36,22 @@ function(Model) {
             this.attr('offset', this.offset - this.limit);
         },
         next: function() {
-            this.attr('offset', this.offset + this.limit);
+            if(this.canNext()) {
+                this.attr('offset', this.offset + this.limit);
+            }
         },
         canPrev: function() {
             return this.attr('offset') > 0;
         },
         canNext: function() {
             return this.attr('offset') < this.attr('count') - this.attr('limit');
+        },
+        entryFirst: function() {
+            return (this.attr('offset') + 1)
+        },
+        entryNext: function() {
+            var next = this.attr('offset') + this.attr('limit')
+            return next > this.attr('count') ? this.attr('count') : next;
         }
     });
 });
