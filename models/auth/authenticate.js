@@ -21,6 +21,21 @@ function(can, Model) {
                     return false;
                 }
             },
+            authKey: {
+                type: 'string',
+                get: function() {
+                    return sessionStorage.getItem('authkey')
+                },
+                set: function(newValue, oldValue) {
+                    if(newValue != oldValue) {
+                        sessionStorage.setItem('authkey', newValue)
+                        this.attr({
+                            login: null,
+                            valid: false
+                        });
+                    }
+                }
+            },
             login: {
                 Value: Store
             }

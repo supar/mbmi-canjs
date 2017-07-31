@@ -12,8 +12,7 @@ function() {
                     { id: 'home', name: 'Home' },
                     { id: 'transport', name: "Transport" },
                     //{ id: 'access', name: 'Access' },
-                    { id: 'spam', name: 'Spam' },
-                    { id: 'logout', name: 'Logout' }
+                    { id: 'spam', name: 'Spam' }
                 ]
             },
             winsize: {

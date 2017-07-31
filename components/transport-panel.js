@@ -65,7 +65,14 @@ function(Component, Model) {
             '</transport-form>',
             "</div>"
         ].join('')),
-        viewModel: Model,
+        viewModel: function(attr, parentScope) {
+            return new Model({
+                app: new can.Map({
+                    route: parentScope.attr('route'),
+                    identity: parentScope.attr('auth')
+                })
+            });
+        },
         events: {
             init: function() {
                 this.readForm();
@@ -86,9 +93,12 @@ function(Component, Model) {
                     state.then(success, error);
                 }
             },
+            '{scope.app.route} change': function() {
+                this.viewModel.removeAttr('error');
+            },
             '.btn-default click': function(el, ev) {
                 var model = this.viewModel;
-                model.doBack();
+                model.doBack(true);
             },
             readForm: function() {
                 var model = this.viewModel,
@@ -97,7 +107,7 @@ function(Component, Model) {
                 model.getFormData();
 
                 model.attr({
-                    gridShow: id != null ? false : true
+                    gridVisible: id != null ? false : true
                 });
             }
         }

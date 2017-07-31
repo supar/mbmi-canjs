@@ -19,19 +19,26 @@ function(Component, Model) {
                         '<div class="glyphicon glyphicon-user" />',
                         '<span>{{email}}</span>',
                     '</div>',
+                    '<div>',
+                        '<div>',
+                            '<button type="button" class="btn btn-primary btn-sm">Logout</button>',
+                        '</div>',
+                    '</div>',
                 '</div>',
             '</header>',
             '<aside>',
             '<div class="nav-panel {{^visible}}hidden{{/visible}}">',
                 '<ul class="menu-panel">',
                 '{{#each items}}',
-                    '<li class=""><a class="{{#is id page}}active{{/is}}" href="#!{{id}}"><span>{{name}}</span></a></li>',
+                    '<li class=""><a class="{{#is id route.page}}active{{/is}}" href="#!{{id}}"><span>{{name}}</span></a></li>',
                 '{{/each}}',
                 '</ul>',
             '</div>',
             '</aside>'
             ].join('')),
-        viewModel: Model,
+        viewModel:function(attr, parentScope) {
+            return new Model({app: parentScope})
+        },
         events: {
             init: function() {
                 this.menuResponsive();
@@ -50,6 +57,25 @@ function(Component, Model) {
                     visible = model.attr('visible');
 
                 model.attr('visible', !visible)
+            },
+
+            '.nav-panel-right > div button.btn click': function() {
+                var model = this.viewModel;
+
+                model.app.attr('auth.authKey', '')
+            }
+        },
+        helpers: {
+            email: function() {
+                var auth = this.app.attr('auth') || null;
+
+                if(auth) {
+                    return [
+                        auth.attr('login.login'),
+                        auth.attr('login.domainname')
+                    ].join('@')
+                }
+                return null
             }
         }
     });

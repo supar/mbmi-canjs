@@ -24,17 +24,10 @@ function(can, Paginate, Model) {
             id: {
                 type: 'number',
                 get: function() {
-                    var page = this.attr('page'),
-                        id = this.attr('pageId');
+                    var id = this.attr('app.route.id');
 
-                    if(page == 'transport' && /^\d+$/.test(id)) {
-                        // Reset error
-                        this.removeAttr('error');
-
-                        return id;
-                    }
-
-                    return null;
+                    return (this.page() && /^\d+$/.test(id)) ? 
+                        id : null;
                 }
             },
             paginate: {
@@ -46,8 +39,7 @@ function(can, Paginate, Model) {
             },
             gridData: {
                 get: function(last) {
-                     var ready = this.attr('panelActive');
-                     if(!ready) {
+                     if(!this.page()) {
                          return null;
                      } else {
                         return this.getGridData();
@@ -57,13 +49,7 @@ function(can, Paginate, Model) {
             gridVisible: {
                 type: 'boolean',
                 get: function() {
-                    return this.attr('id') != null ? false : true;
-                }
-            },
-            panelActive: {
-                type: 'boolean',
-                get: function() {
-                    return !!(this.attr('page') == 'transport');
+                    return !(this.attr('id') != null);
                 }
             }
         },
@@ -71,6 +57,9 @@ function(can, Paginate, Model) {
             var id = scope.attr('id');
 
             this.changeRoute(id);
+        },
+        page: function() {
+            return (this.attr('app.route.page') == 'transport')
         },
         newItem: function() {
             this.changeRoute(0);
@@ -103,6 +92,9 @@ function(can, Paginate, Model) {
             if(reload) {
                 this.attr('gridData', this.getGridData());
             }
+        },
+        reload: function() {
+            this.attr('gridData', this.getGridData());
         },
         getGridData: function() {
             var params = {
