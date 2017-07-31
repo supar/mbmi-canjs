@@ -13,6 +13,11 @@ function(Model) {
             limit: {
                 value: 50
             },
+            limitSizes: {
+                value: [
+                    10, 50, 100, 500
+                ]
+            },
             offset: {
                 value: 0,
                 set: function(newValue) {

@@ -28,6 +28,11 @@ function(can) {
                     return true;
                 }
             }
+        },
+        events: {
+            '{scope.paginate.limit} change': function() {
+                this.viewModel.attr('gridData')
+            }
         }
     });
 })
