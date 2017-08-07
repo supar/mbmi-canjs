@@ -252,8 +252,8 @@ function(fixture) {
             });
         },
         'GET transports': function(request, response) {
-            var start = request.data.offset || 0,
-                end = start + (request.data.limit || data.length);
+            var start = request.data['offset'] || 0,
+                end = start + (request.data['limit'] || transportData.length);
 
             response(200, {
                 count: transportData.length,

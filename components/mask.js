@@ -4,9 +4,9 @@ steal(
     'can/view/stache',
 function(can) {
     can.Component.extend({
-        tag: 'mask',
+        tag: 'panel-mask',
         template: can.stache([
-            '<div class="waiting {{^waiting}}hidden{{/waiting}}"><div>Loading</div></div>'
+            '<div class="waiting-mask {{^if waiting}}hidden{{/if}}"><div></div></div>'
         ].join('')),
         events: {
             '{scope} waiting': function(map) {
@@ -15,10 +15,8 @@ function(can) {
                     masked = this.element.parent().find("[masked]"),
                     position = masked.position();
 
-                me.height(masked.height());
-                me.width(masked.width());
-
-                console.log(position)
+                me.height(masked.outerHeight(true));
+                me.width(masked.outerWidth(true));
             }
         }
     });

@@ -2,7 +2,6 @@ steal(
     'can/component',
     '../models/access.js',
     './grid.js',
-    './pager.js',
     './access-form.js',
 function(Component, Model) {
     Component.extend({

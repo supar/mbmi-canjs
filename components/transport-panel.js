@@ -1,11 +1,11 @@
 steal(
+    '../models/transport',
+    './grid',
+    './form',
+    'can/util',
     'can/component',
-    '../models/transport.js',
-    './grid.js',
-    './pager.js',
-    './transport-form.js',
-function(Component, Model) {
-    Component.extend({
+function(Model) {
+    can.Component.extend({
         tag: 'transport-panel',
         template: can.stache([
             '<div class="panel panel-default">',
@@ -15,11 +15,12 @@ function(Component, Model) {
                     '<div class="alert alert-danger" role="alert">{{error}}</div>',
                 '</div>',
             '{{/if}}',
-            '<grid {grid-data}="gridData">',
+            '{{#if isGrid()}}',
+            '<panel-grid {api}="api" {^error}="error">',
             '<div class="panel-body">',
                 '<div role="toolbar" role="toolbar">',
                     '<div class="btn-group" role="group">',
-                        '<button type="button" class="btn btn-primary btn-sm" ($click)="newItem">New transport</button>',
+                        '<button type="button" class="btn btn-primary btn-sm" ($click)="create">New transport</button>',
                     '</div>',
                 '</div>',
             '</div>',
@@ -29,40 +30,39 @@ function(Component, Model) {
                 '<td>{{transport}}</td>',
                 '<td>{{rootdir}}</td>',
             '</tr>{{/each}}',
-            '</grid>',
-            '<transport-form {transport-data}="transport" {^save-status}="saveStatus">',
+            '</panel-grid>',
+            '{{/if}}',
+            '{{#if isForm()}}',
+            '<panel-form {item-id}="id" {api}="api" {^error}="error" {^form-data}="formData">',
                 '<fieldset>',
-                '<input type="hidden" can-value="{transportData.id}">',
+                '<input type="hidden" can-value="{formData.id}">',
                 '<div class="form-group">',
                     '<label for="inputClient" class="col-sm-4 control-label">Domain name</label>',
                     '<div class="col-sm-4">',
-                        '<input type="input" class="form-control" id="inputClient" placeholder="Domain name" can-value="{transportData.domain}">',
+                        '<input type="input" class="form-control" id="inputClient" placeholder="Domain name" can-value="{formData.domain}">',
                     '</div>',
                 '</div>',
                 '<div class="form-group">',
                     '<label for="inputClient" class="col-sm-4 control-label">Transport</label>',
                     '<div class="col-sm-4">',
-                        '<select class="form-control" can-value="{transportData.transport}">',
-                            '{{#each transport}}',
-                            '<option {{#is transportData.transport .}}selected{{/is}}>{{.}}</option>',
-                            '{{/each}}',
-                        '</select>',
+                        '<input type="input" class="form-control" id="inputTransport" placeholder="Transport" can-value="{formData.transport}">',
                     '</div>',
                 '</div>',
                 '<div class="form-group">',
                     '<label for="inputClient" class="col-sm-4 control-label">Mailboxes root directory</label>',
                     '<div class="col-sm-4">',
-                        '<input type="input" class="form-control" id="inputRootdir" placeholder="Mailboxes root directory" can-value="{transportData.rootdir}">',
+                        '<input type="input" class="form-control" id="inputRootdir" placeholder="Mailboxes root directory" can-value="{formData.rootdir}">',
                     '</div>',
                 '</div>',
                 '<div class="form-group">',
                     '<div class="col-sm-offset-4 col-xs-offset-4 col-sm-6">',
-                        '<button type="submit" class="btn btn-primary">Save</button>',
-                        '<button type="input" class="btn btn-default">Cancel</button>',
+                        '<button type="button" class="btn btn-primary">Save</button>',
+                        '<button type="button" class="btn btn-default">Cancel</button>',
                     '</div>',
                 '</div>',
                 '</fieldset>',
-            '</transport-form>',
+            '</panel-form>',
+            '{{/if}}',
             "</div>"
         ].join('')),
         viewModel: function(attr, parentScope) {
@@ -74,41 +74,33 @@ function(Component, Model) {
             });
         },
         events: {
-            init: function() {
-                this.readForm();
-            },
-            '{scope} id': function() {
-                this.readForm();
-            },
-            '{scope} saveStatus': function(map) {
-                var state = map.attr('saveStatus'),
-                    success = can.proxy(function(response) {
-                        map.doBack(true);
-
-                        return response;
-                    }, map),
-                    error = can.proxy(map.Error, map);
-
-                if(state && state.state() === 'pending') {
-                    state.then(success, error);
-                }
-            },
             '{scope.app.route} change': function() {
                 this.viewModel.removeAttr('error');
             },
-            '.btn-default click': function(el, ev) {
-                var model = this.viewModel;
-                model.doBack(true);
-            },
-            readForm: function() {
+            'form button.btn-primary click': function(el, ev) {
                 var model = this.viewModel,
-                    id = model.attr('id');
+                    transport = model.attr('formData');
+                
+                if(transport) {
+                    transport.save(function() {
+                        model.route();
+                    }, function(error) {
+                        model.attr('error', error['message'] || 'Unknown error')
+                    });
+                } 
+            },
+            'form button.btn-default click': function(el, ev) {
+                var model = this.viewModel;
 
-                model.getFormData();
-
-                model.attr({
-                    gridVisible: id != null ? false : true
-                });
+                model.route();
+            }
+        },
+        helpers: {
+            isGrid: function() {
+                return (this.page() && this.attr('id') == null)
+            },
+            isForm: function() {
+                return (this.page() && this.attr('id') != null)
             }
         }
     });

@@ -1,11 +1,10 @@
 steal(
+    '../models/spam',
+    './grid',
+    'can/util',
     'can/component',
-    '../models/spam.js',
-    './grid.js',
-    './pager.js',
-    'can/view/stache',
-function(Component, Model) {
-    Component.extend({
+function(Model) {
+    can.Component.extend({
         tag: 'spam-panel',
         template: can.stache([
             '<div class="panel panel-default">',
@@ -15,9 +14,9 @@ function(Component, Model) {
                     '<div class="alert alert-danger" role="alert">{{error}}</div>',
                 '</div>',
             '{{/if}}',
-            '<grid {grid-data}="gridData">',
+            '<panel-grid {api}="api" {^error}="error">',
             '{{#each items}}',
-                '<tr row-index="{{%index}}" ($click)="edit(%index, %scope)">',
+                '<tr row-index="{{%index}}">',
                     '<td>{{client}}</td>',
                     '<td>{{from}}</td>',
                     '<td>{{ip}}</td>',
@@ -25,10 +24,17 @@ function(Component, Model) {
                     '<td>{{indexRound}}</td>',
                 '</tr>',
             '{{/each}}',
-            '</grid>',
-            '</div>'].join('')
-        ),
-        viewModel: Model,
+            '</panel-grid>',
+            '</div>'
+        ].join('')),
+        viewModel: function(attr, parentScope) {
+            return new Model({
+                app: new can.Map({
+                    route: parentScope.attr('route'),
+                    identity: parentScope.attr('auth')
+                })
+            });
+        },
         helpers: {
             indexRound: function(opts) {
                 var opts = opts || {},

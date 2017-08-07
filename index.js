@@ -9,7 +9,7 @@ steal(
     'components/application.js',
     'components/authenticate.js',
     'components/transport-panel.js',
-    'components/access-panel.js',
+//    'components/access-panel.js',
     'components/spam-panel.js',
     //!steal-remove-start
     'models/fixtures/fixtures.js',

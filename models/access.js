@@ -1,6 +1,5 @@
 steal(
     'can/util',
-    './pagination',
     'can/model',
     'can/map/define',
 function(can, Paginate, Model) {

@@ -8,7 +8,7 @@ function(stache, spamPanel) {
                 '<transport-panel />',
                 '</div>',
                 '<div class="container-fluid card-layout {{^eq route.page "spam"}}hidden{{/eq}}">',
-                '<spam-panel></spam-panel>',
+                '<spam-panel />',
                 '</div>',
                 '<div class="container-fluid card-layout {{^eq route.page "access"}}hidden{{/eq}}">',
                 '<access-panel {page}="page" {page-id}="id">', , '</access-panel>',
