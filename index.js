@@ -2,7 +2,6 @@ import $ from 'jquery';
 import 'bootstrap';
 
 import './less/application.less!';
-import './less/responsive.less!';
 import './less/authorize.less!';
 
 steal(
