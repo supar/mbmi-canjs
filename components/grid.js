@@ -10,7 +10,7 @@ function() {
         template: can.stache([
             '<panel-mask {waiting}="gridData.isPending" />',
             '<div masked>',
-                '<table class="table table-data"><tbody><content/></tbody></table>',
+                '<table class="table table-data table-responsive-condense"><tbody><content/></tbody></table>',
                 '{{#if pagination}}',
                 '<div class="panel-footer">',
                     '<div class="row">',
