@@ -50,7 +50,7 @@ function() {
                                 offset: model.attr('offset')
                             } : {};
 
-                        if(typeof filter == "object") {
+                        if(filter && typeof filter == "object") {
                             params = $.extend(params, filter.attr());
                         }
 
