@@ -14,16 +14,15 @@ function(Model) {
                     '<div class="alert alert-danger" role="alert">{{error}}</div>',
                 '</div>',
             '{{/if}}',
+            '{{#if isGrid()}}',
             '<panel-grid {api}="api" {filter}="filter" {^error}="error">',
-                '<thead>',
+            '<thead>',
                 '<tr>',
-                    '<th>Host</th>',
-                    '<th>IP</th>',
-                    '<th>Attempts</th>',
-                    '<th>Index</th>',
+                    '<th>Host / IP</th>',
+                    '<th>Restriction</th>',
                 '</tr>',
-                '</thead>',
-                '<tbody>',
+            '</thead>',
+            '<tbody>',
             '{{#each items}}',
                 '<tr row-index="{{%index}}">',
                     '<td data-title="Host">{{from}}</td>',
@@ -32,8 +31,9 @@ function(Model) {
                     '<td data-title="Index">{{indexRound}}</td>',
                 '</tr>',
             '{{/each}}',
-                '</tbody>',
+            '</tbody>',
             '</panel-grid>',
+            '{{/if}}',
             '</div>'
         ].join('')),
         viewModel: function(attr, parentScope) {
@@ -55,6 +55,9 @@ function(Model) {
                 }
 
                 return index.toFixed(4);
+            },
+            isGrid: function() {
+                return (this.page() && this.attr('id') == null)
             }
         }
     });

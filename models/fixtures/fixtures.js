@@ -131,7 +131,7 @@ function(fixture) {
                 });
             }
         },
-        'GET accesses/{id}': function(request, response) {
+        'GET access/{id}': function(request, response) {
             var id = request.data.id,
                 item, a;
 
@@ -154,7 +154,7 @@ function(fixture) {
                 });
             }
         },
-        'POST accesses': function(request, response) {
+        'PUT access/{id}': function(request, response) {
             var auth = Authorize(),
                 data = request.data,
                 done = false;
@@ -202,7 +202,7 @@ function(fixture) {
                 success: true
             });    
         },
-        'PUT accesses': function(request, response) {
+        'POST access': function(request, response) {
             var auth = Authorize(),
                 data = request.data,
                 maxId = 0;
@@ -227,12 +227,11 @@ function(fixture) {
                 maxId++;
     
                 data.id = maxId;
-                console.log(data);
                 accessData.push(data);
 
                 response(200, {
                     success: true
-                });    
+                });
             }
             catch (err) {
                 response(err.code, {
@@ -241,6 +240,34 @@ function(fixture) {
                 });
             }
 
+        },
+        'DELETE access/{id}': function(request, response) {
+            var id = request.data.id,
+                auth = Authorize(),
+                data = request.data;
+            
+            try {
+                if(!auth) {
+                    throw new AuthError();
+                }
+
+                for(var i in accessData) {
+                    if(a = accessData[i], a.id == id) {
+                        accessData.splice(i, 1);
+                        break;
+                    }
+                }
+
+                response(200, {
+                    success: true
+                });
+            }
+            catch (err) {
+                response(err.code, {
+                    success: false,
+                    error: err.message
+                });
+            }
         },
         'GET spam': function(request, response) {
             var start = request.data.offset || 0,

@@ -10,9 +10,9 @@ function() {
             items: {
                 value: [
                     { id: 'home', name: 'Home' },
-                    { id: 'transport', name: "Transport" },
-                    //{ id: 'access', name: 'Access' },
-                    { id: 'spam', name: 'Spam' }
+                    { id: 'access', name: 'SMTP restrictions' },
+                    { id: 'spam', name: 'Spam' },
+                    { id: 'transport', name: "Transport" }
                 ]
             },
             winsize: {
