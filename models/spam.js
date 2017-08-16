@@ -8,6 +8,11 @@ function(Panel) {
                     findAll: 'GET spam'
                 }
             },
+            filter: {
+                value: {
+                    sort: 'index'
+                }
+            },
             // Panel title
             title: {
                 value: "Spam stat"

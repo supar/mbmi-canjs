@@ -14,7 +14,7 @@ function(Model) {
                     '<div class="alert alert-danger" role="alert">{{error}}</div>',
                 '</div>',
             '{{/if}}',
-            '<panel-grid {api}="api" {^error}="error">',
+            '<panel-grid {api}="api" {filter}="filter" {^error}="error">',
             '{{#each items}}',
                 '<tr row-index="{{%index}}">',
                     '<td data-title="Client">{{client}}</td>',

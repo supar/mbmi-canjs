@@ -44,10 +44,15 @@ function() {
                         var model = this,
                             store = model.attr('api'),
                             pages = model.attr('pagination') || false,
+                            filter = model.attr('filter') || null,
                             params = pages ? {
                                 limit: model.attr('limit'),
                                 offset: model.attr('offset')
                             } : {};
+
+                        if(typeof filter == "object") {
+                            params = $.extend(params, filter.attr());
+                        }
 
                         return store.findAll(params);
                     }
