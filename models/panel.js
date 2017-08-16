@@ -40,6 +40,34 @@ function(can) {
 
             this.route(id);
         },
+        error: function(response) {
+            msg = 'Unknown error';
+
+            if(!response || typeof response != 'object') {
+                return
+            }
+
+            if(response['message']) {
+                this.attr('error', response['message']);
+                return
+            }
+
+            if(response['status']) {
+                switch(response['status']) {
+                    case 500:
+                        if(response['responseJSON']) {
+                            msg = response.responseJSON['error'] || msg;
+                        }
+
+                        break;
+
+                    default:
+                        msg = response['statusText'] || msg;
+                }
+            }
+
+            this.attr('error', msg);
+        },
         route: function(id) {
             var id = id || (typeof id == "number" ? 0 : null);
 
