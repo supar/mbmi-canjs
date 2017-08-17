@@ -11,9 +11,11 @@ function(Auth, mainView) {
         authorize: null,
 
         // HTML elements
+        loader: null,
         bodyEl: null,
         mainEl: null,
 
+        ready: null,
         routeState: null,
 
     }, {
@@ -22,15 +24,13 @@ function(Auth, mainView) {
 
             this.routeState = new app();
             this.bodyEl = $(document.body);
+            this.loader = $('#load-wrap');
             this.loginEl = $('#auth-wrap');
             this.mainEl = $('#main-wrap');
 
             this.initAjax();
             this.applyRoute();
 
-            // Initialize authentication and try to get
-            // authentication
-            this.initAuth()
         },
 
         applyRoute: function() {
@@ -128,6 +128,11 @@ function(Auth, mainView) {
                 this.authorize.newLogin();
             }
 
+            if(!this.ready) {
+                this.loader.addClass('loaded');
+                this.ready = true;
+            }
+
             main[!newValue ? 'addClass' : 'removeClass']('hidden');
             login[newValue ? 'addClass' : 'removeClass']('hidden');
         },
@@ -138,6 +143,10 @@ function(Auth, mainView) {
 
         run: function() {
             this.routeState.bind('change', can.proxy(this.route, this));
+
+            // Initialize authentication and try to get
+            // authentication
+            this.initAuth()
         }
     });
 
