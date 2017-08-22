@@ -1,7 +1,6 @@
 steal(
     '../models/auth/authenticate',
     '../views/main',
-    'components/menu.js',
     'can/control',
     'can/map',
     'can/route',

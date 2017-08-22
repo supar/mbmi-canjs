@@ -16,6 +16,7 @@
     },
     "steal": {
         "bundle": [
+            "components/menu",
             "components/application",
             "components/authenticate",
             "components/access-panel",

@@ -2,7 +2,7 @@ steal(
     'can/view/stache',
 function(stache, spamPanel) {
         return stache([
-            '<view-navbar />',
+            '<can-import from="components/menu">{{#if isResolved}}<view-navbar />{{/if}}</can-import>',
             '<section class="main-content">',
                 '<div class="container-fluid card-layout {{^eq route.page "transport"}}hidden{{/eq}}">',
                 '<transport-panel />',
