@@ -1,7 +1,5 @@
-// map fixtures for this application
-steal(
-    "can/util/fixture", 
-function(fixture) {
+import fixture from 'can-fixture';
+
     var loginData =  [
             { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1" },
             { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2" },
@@ -32,7 +30,7 @@ function(fixture) {
                 { client: "ykdownp@holihik.co.ua", ip: "217.172.177.226", from: "ykdownp@holihik.co.ua", attempt: 1, index: 0.024690087971667385 },
                 { client: "malololopez@aol.com", ip: "178.207.161.114", from: "malololopez@aol.com", attempt: 1, index: 0.024690087971667385 },
                 { client: "5.141.219.117", ip: "5.141.219.117", from: "unbendingo076@list.ru", attempt: 1, index: 0.024690087971667385 }
-        ];
+        ],
 
         transportData = [
             { id: "1", domain: "domain.com", transport: "virtual", rootdir: "/var/mail" },
@@ -453,4 +451,3 @@ function(fixture) {
 
         document.cookie = updatedCookie;
     }
-});
