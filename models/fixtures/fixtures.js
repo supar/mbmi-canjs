@@ -66,7 +66,7 @@ import fixture from 'can-fixture';
                 });
             }
         },
-        'PUT login': function(request, response) {
+        'POST login': function(request, response) {
             var data = request.data,
                 auth = getCookie('authsess'),
                 authSess;
@@ -82,7 +82,9 @@ import fixture from 'can-fixture';
 
                 for(var i in loginData) {
                     if([loginData[i].login, loginData[i].domainname].join('@') == data['email'] && loginData[i].password == data['password']) {
-                        authSess = loginData[i];
+                        authSess = {
+                            jwt: loginData[i].jwt
+                        };
                         break;
                     }
                 }
@@ -99,7 +101,10 @@ import fixture from 'can-fixture';
             catch (err) {
                 response(401, {
                     success: false,
-                    error: err.message
+                    error: {
+                        code: 401,
+                        message: err.message
+                    }
                 });
             }
 

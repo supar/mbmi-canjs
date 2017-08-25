@@ -1,0 +1,40 @@
+{{#if ready}}
+<div id="main-wrap" class="main {{^if isAuthorized}}hidden{{/if}}">
+{{#if isAuthorized}}
+{{/if}}
+</div>
+<div id="auth-wrap" class="main mask {{#if isAuthorized}}hidden{{/if}}">
+{{^if isAuthorized}}
+    <can-import from="components/authorize" />
+    <login-panel>
+    <div class="panel-login">
+        <div class="panel-login-body">
+        <form role="form">
+        <h2 class="form-signin-heading">Please sign in</h2>
+           {{#if error}}
+               <div class="panel-body">
+                   <div class="alert alert-danger e" role="alert">
+                       {{error}}
+                   </div>
+               </div>
+           {{/if}}
+           <div class="login-wrap">
+           <div class="form-group">
+               <label for="inputAuthEmail" class="control-label">Email</label>
+               <input type="email" id="inputAuthEmail" class="form-control" required placeholder="Email" can-value="email">
+           </div>
+           <div class="form-group">
+               <label for="inputAuthPass" class="control-label">Пароль</label>
+               <input type="password" id="inputAuthPass" class="form-control" required placeholder="Password" can-value="password">
+           </div>
+           <div class="form-group">
+               <button type="submit" class="btn btn-lg btn-primary btn-block {{#if isPending}}disabled{{/if}}">Send</button>
+           </div>
+           </div>
+        </form>
+        </div>
+    </div>
+    </login-panel>
+{{/if}}
+</div>
+{{/if}}
