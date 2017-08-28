@@ -25,6 +25,17 @@ var AppModel = map.extend({
             }
         },
 
+        jwt: {
+            type: 'string',
+            set: function(val) {
+                sessionStorage.setItem('authkey', val);
+
+                if(!val && this.attr('session')) {
+                    this.removeAttr('session');
+                }
+            }
+        },
+
         ready: {
             type: 'boolean',
             value: false
@@ -49,21 +60,23 @@ var AppModel = map.extend({
     }
 });
 
+var Application = new AppModel({
+    jwt: sessionStorage.getItem('authkey')
+});
+// Remove loader
+Application.bind('ready', function(ev, val) {
+    $('#load-wrap').addClass('loaded');
+});
+
 // Set authorization key to each request
 $.ajax({
     beforeSend: function(xhr) {
-        var key = sessionStorage.getItem('authkey');
+        var key = this.attr('jwt');
     
         if(key) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + key);
         }
-    }
-});
-
-var Application = new AppModel();
-// Remove loader
-Application.bind('ready', function(ev, val) {
-    $('#load-wrap').addClass('loaded');
+    }.bind(Application)
 });
 
 // Configure routes

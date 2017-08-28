@@ -67,7 +67,7 @@ export default component.extend({
 
         model.bind('jwt', function(ev, val) {
             if(val) {
-                sessionStorage.setItem('authkey', val)
+                this.set('jwt', val);
                 this.get('initSession')();
             }
         }.bind(parentScope));

@@ -1,45 +1,38 @@
-import Component from 'can/component/component';
-import stache from 'can/view/stache/stache';
-import Model from '../models/navbar.js';
+import component from 'can-component';
+import map from 'can-map';
 
-export default Component.extend({
-    tag: "view-navbar",
-    template: stache([
-        '<header class="header">',
-            '<div class="container-fluid nav-row">',
-                '<div>',
-                    '<div class="navbar-toggle menu-toggle">',
-                        '<span class="icon-bar"></span>',
-                        '<span class="icon-bar"></span>',
-                        '<span class="icon-bar"></span>',
-                    '</div>',
-                '</div>',
-                '<div class="row-center">',
-                    '<div class="flex-row">',
-                        '<div>',
-                            '<div class="flex-item-right overflow-item">',
-                                '<i class="glyphicon glyphicon-user"></i>&nbsp;{{email}}',
-                            '</div>',
-                        '</div>',
-                    '</div>',
-                '</div>',
-                '<div>',
-                    '<button type="button" class="btn btn-primary">Logout</button>',
-                '</div>',
-            '</div>',
-        '</header>',
-        '<aside>',
-        '<div class="nav-panel {{^visible}}hidden{{/visible}}">',
-            '<ul class="menu-panel">',
-            '{{#each items}}',
-                '<li class=""><a class="{{#is id route.page}}active{{/is}}" href="#!{{id}}"><span>{{name}}</span></a></li>',
-            '{{/each}}',
-            '</ul>',
-        '</div>',
-        '</aside>'
-        ].join('')),
+import 'can-map-define';
+
+let menu = map.extend({
+    define: {
+        visible: {
+            type: 'boolean',
+            value: false
+        },
+        items: {
+            value: [
+                { id: 'home', name: 'Home' },
+                { id: 'access', name: 'SMTP restrictions' },
+                { id: 'spam', name: 'Spam' },
+                { id: 'transport', name: "Transport" }
+            ]
+        },
+        winsize: {
+            type: 'number',
+            set: function(newVal) {
+                this.attr('visible', (newVal <= 768) ? false : true);
+                return newVal;
+            }
+        }
+    }
+});
+
+export default component.extend({
+    tag: "navigation-panel",
     viewModel:function(attr, parentScope) {
-        return new Model({app: parentScope})
+        return new menu({
+            app: parentScope
+        });
     },
     events: {
         init: function() {
@@ -61,20 +54,20 @@ export default Component.extend({
             model.attr('visible', !visible)
         },
 
-        '.nav-panel-right > div button.btn click': function() {
+        '.nav-row .btn-logout click': function() {
             var model = this.viewModel;
 
-            model.app.attr('auth.authKey', '')
+            model.app.set('jwt', '');
         }
     },
     helpers: {
         email: function() {
-            var auth = this.app.attr('auth') || null;
+            var session = this.app.get('session') || null;
 
-            if(auth) {
+            if(session) {
                 return [
-                    auth.attr('login.login'),
-                    auth.attr('login.domainname')
+                    session.attr('login'),
+                    session.attr('domainname')
                 ].join('@')
             }
             return null

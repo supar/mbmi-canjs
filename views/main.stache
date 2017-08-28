@@ -1,10 +1,42 @@
 {{#if ready}}
-<div id="main-wrap" class="main {{^if isAuthorized}}hidden{{/if}}">
+<div class="main">
 {{#if isAuthorized}}
-{{/if}}
-</div>
-<div id="auth-wrap" class="main mask {{#if isAuthorized}}hidden{{/if}}">
-{{^if isAuthorized}}
+    <can-import from="components/menu" />
+    <navigation-panel>
+    <header class="header">
+       <div class="container-fluid nav-row">
+           <div>
+               <div class="navbar-toggle menu-toggle">
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+               </div>
+           </div>
+           <div class="row-center">
+               <div class="flex-row">
+                   <div>
+                       <div class="flex-item-right overflow-item">
+                           <i class="glyphicon glyphicon-user"></i>&nbsp;{{email}}
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div>
+               <button type="button" class="btn btn-primary btn-logout">Logout</button>
+           </div>
+       </div>
+    </header>
+    <aside>
+    <div class="nav-panel {{^visible}}hidden{{/visible}}">
+       <ul class="menu-panel">
+       {{#each items}}
+           <li class=""><a class="{{#is id route.page}}active{{/is}}" href="#!{{id}}"><span>{{name}}</span></a></li>
+       {{/each}}
+       </ul>
+    </div>
+    </aside>
+    </navigation-panel>
+{{else}}
     <can-import from="components/authorize" />
     <login-panel>
     <div class="panel-login">
