@@ -23,7 +23,8 @@
     },
     "steal": {
         "bundle": [
-            "components/authorize"
+            "components/authorize",
+            "components/menu"
         ],
         "meta": {
             "models/fixtures": {
