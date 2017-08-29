@@ -30,12 +30,14 @@
     <div class="nav-panel {{^visible}}hidden{{/visible}}">
        <ul class="menu-panel">
        {{#each items}}
-           <li class=""><a class="{{#is id route.page}}active{{/is}}" href="#!{{id}}"><span>{{name}}</span></a></li>
+           <li class=""><a class="{{#routeCurrent(page=id,true)}}active{{/routeCurrent}}" href="#!{{id}}"><span>{{name}}</span></a></li>
        {{/each}}
        </ul>
     </div>
     </aside>
     </navigation-panel>
+    <section class="main-content">
+    </section>
 {{else}}
     <can-import from="components/authorize" />
     <login-panel>
