@@ -5,6 +5,7 @@ import './less/application.less!';
 import map from 'can-map';
 import 'can-map-define';
 import route from 'can-route';
+import 'can-stache/helpers/route';
 
 //!steal-remove-start
 import 'models/fixtures/fixtures';
@@ -41,8 +42,14 @@ var AppModel = map.extend({
             value: false
         },
 
+        itemId: {
+            serialize: true,
+            type: 'number'
+        },
+
         page: {
-            serialize: true
+            serialize: true,
+            type: 'string'
         }
     },
     initSession: function() {
@@ -60,7 +67,7 @@ var AppModel = map.extend({
     }
 });
 
-var Application = new AppModel({
+var Application = window.Applicatio = new AppModel({
     jwt: sessionStorage.getItem('authkey')
 });
 // Remove loader
@@ -79,11 +86,10 @@ $.ajax({
     }.bind(Application)
 });
 
-// Configure routes
+// Configure routes map
 route.data = Application;
-route('{page}/{id}', {
-    page: 'home'
-});
+route('{page}');
+route('{page}/{itemId}');
 
 // Render template
 $('body').append(tpl(Application));
