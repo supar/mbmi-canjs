@@ -19,11 +19,14 @@ let menu = map.extend({
         },
         winsize: {
             type: 'number',
-            set: function(newVal) {
-                this.attr('visible', (newVal <= 768) ? false : true);
-                return newVal;
+            set: function(val) {
+                this.attr('visible', !this.isSmallScreen(val));
+                return val;
             }
         }
+    },
+    isSmallScreen: function(val) {
+        return (val <= 768);
     }
 });
 
@@ -36,15 +39,11 @@ export default component.extend({
     },
     events: {
         init: function() {
-            this.menuResponsive();
-        },
-
-        menuResponsive: function() {
-            this.viewModel.attr('winsize', $(window).width());
+            this.screen();
         },
 
         '{window} resize': function() {
-            this.menuResponsive();
+            this.screen();
         },
 
         '.menu-toggle click': function() {
@@ -54,10 +53,22 @@ export default component.extend({
             model.attr('visible', !visible)
         },
 
+        'ul.menu-panel a click': function() {
+            var model = this.viewModel;
+
+            if(model.isSmallScreen(this.screen())) {
+                model.attr('visible', false);
+            }
+        },
+
         '.nav-row .btn-logout click': function() {
             var model = this.viewModel;
 
             model.app.set('jwt', '');
+        },
+
+        screen: function() {
+            this.viewModel.attr('winsize', $(window).width());
         }
     },
     helpers: {
@@ -71,6 +82,11 @@ export default component.extend({
                 ].join('@')
             }
             return null
+        },
+        screen: function() {
+            var model = this.viewModel;
+
+            model.attr('winsize', $(window).width())
         }
     }
 });
