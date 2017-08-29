@@ -42,22 +42,21 @@ connect(
 export default component.extend({
     tag: 'login-panel',
     events: {
-        'submit': function(el) {
+        'form submit': function(el, ev) {
             var model = this.viewModel;
-                //promise = model.save();
 
-            //model.attr('signin', promise);
+            ev.preventDefault();
 
-           model.save().then(
-                    // success
-                    function(instance) {
-                        instance.attr('password', '');
-                    },
-                    // fail
-                    function(response) {
-                        model.attr('error', (new error(response)).Error());
-                    }
-                );
+            model.save().then(
+                // success
+                function(instance) {
+                    instance.attr('password', '');
+                },
+                // fail
+                function(response) {
+                    model.attr('error', (new error(response)).Error());
+                }
+            );
 
             return false;
         }
