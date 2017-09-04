@@ -1,84 +1,26 @@
-steal(
-    'can/util',
-function(can) {
-    return can.Map.extend({
-        define: {
-            activeItem: {
-                type: 'string'
-            },
-            apiCfg: {
-                Type: Object
-            },
-            api: {
-                get: function(val) {
-                    var cfg = this.attr('apiCfg') || {};
-                
-                    if(!val) {
-                        val = can.Model.extend(cfg, {});
-                        // Don't use setter to prevent loop here
-                        this.api = val;
-                    }
+import map from 'can-define/map/map';
+import route from 'can-route';
 
-                    return val;
-                }
-            },
-            id: {
-                type: 'number',
-                get: function() {
-                    var id = this.attr('app.route.id');
+export default map.extend(
+    'PanelModel',
+    {
+        seal: true
+    }, {
+        api: 'Object',
+        title: 'string',
 
-                    return (this.page() && /^\d+$/.test(id)) ? 
-                        id : null;
-                }
-            }
-        },
-        create: function() {
-            this.route(0);
-        },
-        edit: function(idx, scope) {
-            var id = scope.attr('id');
-
-            this.route(id);
-        },
-        error: function(response) {
-            msg = 'Unknown error';
-
-            if(!response || typeof response != 'object') {
-                return
-            }
-
-            if(response['message']) {
-                this.attr('error', response['message']);
-                return
-            }
-
-            if(response['status']) {
-                switch(response['status']) {
-                    case 500:
-                        if(response['responseJSON']) {
-                            msg = response.responseJSON['error'] || msg;
-                        }
-
-                        break;
-
-                    default:
-                        msg = response['statusText'] || msg;
-                }
-            }
-
-            this.attr('error', msg);
+        id: function() {
+            return route.data.attr('itemId');
         },
         route: function(id) {
             var id = id || (typeof id == "number" ? 0 : null);
-
+        
             if(parseInt(id) > -1) {
-                can.route.attr({
-                    page: can.route.attr('page'),
-                    id: id
-                });
+                route.data.attr({
+                    itemId: id
+                }, true);
             } else {
-                can.route.removeAttr('id');
+                route.data.removeAttr('itemId');
             }
         }
     });
-});
