@@ -1,42 +1,34 @@
-steal(
-    'can/util',
-    './mask',
-function(can) {
-    can.Component.extend({
-        tag: 'panel-form',
-        template: can.stache([
-            '<mask {waiting}="formData.isPending" />',
-            '<div masked class="panel-body">',
-            '<form class="form-horizontal" role="form"><content /></form>',
-            '</div>',
-        ].join('')),
-        viewModel: {
-            define: {
-                formData: {
-                    get: function(last, setAttrValue) {
-                        var model = this,
-                            store = model.attr('api'),
-                            id = model.attr('itemId');
-                        
-                        if(id > 0) {
-                            return store.findOne({
-                                id: id
-                            }, function(response) {
-                                setAttrValue(response);
-                            }, function(response) {
-                                var err = response['message'] || 
-                                    (response['responseJSON'] ? response.responseJSON['error'] : 'Unknown error');
+import component from 'can-component';
+import map from 'can-define/map/map';
+import tpl from '../views/form.stache!';
 
-                                err = err || 'Unknown error';
-                                model.attr('error', err)
-                            }); 
-                        } 
+let model = map.extend({
+    formData: {
+        get: function(promise, setAttr) {
+            var model = this.get('panel'),
+                store = model.get('api'),
+                id = model.get('id'),
+                onError = model.get('onError');
 
-                        return new store();
-                    }
+
+            if(id() > 0) {
+                if(typeof onError != 'function') {
+                    onError = function() {};
                 }
+
+                return store.get({id: id()}).
+                    then(setAttr, onError(model));
             }
+
+            return new store({
+                id: 0
+            });
         }
-    });
+    }
 });
 
+export default component.extend({
+    tag: 'panel-form',
+    view: tpl,
+    ViewModel: model
+});

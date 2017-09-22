@@ -1,0 +1,5 @@
+<div masked class="panel-body">
+    <form class="form-horizontal" role="form">
+        <can-slot name="form-body" this:from="formData" />
+    </form>
+</div>
