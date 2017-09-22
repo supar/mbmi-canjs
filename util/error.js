@@ -15,8 +15,16 @@ export default construct.extend({
     init: function(response) {
         var me = this;
 
-        if(!response || typeof response != 'object') {
+        if(!response) {
             return
+        }
+
+        if(typeof response == 'string') {
+            this.message = response;
+        }
+
+        if(typeof response != 'object') {
+            return;
         }
 
         try {
