@@ -9,52 +9,61 @@
 <div class="panel-body">
    <div role="toolbar" role="toolbar">
        <div class="btn-group" role="group">
-           <button type="button" class="btn btn-primary btn-sm" ($click)="create">New transport</button>
+           <button type="button" class="btn btn-primary btn-sm" on:click="route(0)">New transport</button>
        </div>
    </div>
 </div>
-<panel-grid {api}="api" {^error}="error">
-<tbody>
-{{#each items}}
-   <tr row-index="{{%index}}" ($click)="edit(%index, %scope)">
-       <td data-title="ID">{{id}}</td>
-       <td data-title="Domain">{{domain}}</td>
-       <td data-title="Transport">{{transport}}</td>
-       <td data-title="Disk directory">{{rootdir}}</td>
-   </tr>
-{{/each}}
-</tbody>
+<can-import from="../components/grid" />
+<panel-grid api:from="api" error:to="error">
+    <can-template name="grid-body-row">
+    {{^isPending}}
+    {{#this}}
+    <tr on:click="route({{id}}, %scope)">
+        <td data-title="ID">{{id}}</td>
+        <td data-title="Domain">{{domain}}</td>
+        <td data-title="Transport">{{transport}}</td>
+        <td data-title="Disk directory">{{rootdir}}</td>
+    </tr>
+    {{/this}}
+    {{/isPending}}
+    </can-template>
 </panel-grid>
 {{/if}}
 {{#if isForm()}}
-<panel-form {item-id}="id" {api}="api" {^error}="error" {^form-data}="formData">
-   <fieldset>
-   <input type="hidden" can-value="{formData.id}">
-   <div class="form-group">
-       <label for="inputClient" class="col-sm-4 control-label">Domain name</label>
-       <div class="col-sm-4">
-           <input type="input" class="form-control" id="inputClient" placeholder="Domain name" can-value="{formData.domain}">
-       </div>
-   </div>
-   <div class="form-group">
-       <label for="inputClient" class="col-sm-4 control-label">Transport</label>
-       <div class="col-sm-4">
-           <input type="input" class="form-control" id="inputTransport" placeholder="Transport" can-value="{formData.transport}">
-       </div>
-   </div>
-   <div class="form-group">
-       <label for="inputClient" class="col-sm-4 control-label">Mailboxes root directory</label>
-       <div class="col-sm-4">
-           <input type="input" class="form-control" id="inputRootdir" placeholder="Mailboxes root directory" can-value="{formData.rootdir}">
-       </div>
-   </div>
-   <div class="form-group">
-       <div class="col-sm-offset-4 col-xs-offset-4 col-sm-6">
-           <button type="button" class="btn btn-primary">Save</button>
-           <button type="button" class="btn btn-default">Cancel</button>
-       </div>
-   </div>
-   </fieldset>
+<can-import from="../components/form" />
+<panel-form panel:from="this">
+    <can-template name="form-body">
+    <fieldset>
+    <input type="hidden" value:bind="id">
+    <div class="form-group">
+        <label for="inputClient" class="col-sm-4 control-label">Domain name</label>
+        <div class="col-sm-4">
+            <input type="input" class="form-control" id="inputClient" placeholder="Domain name" value:bind="domain">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputClient" class="col-sm-4 control-label">Transport</label>
+        <div class="col-sm-4">
+            <input type="input" class="form-control" id="inputTransport" placeholder="Transport" value:bind="transport">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputClient" class="col-sm-4 control-label">Mailboxes root directory</label>
+        <div class="col-sm-4">
+            <input type="input" class="form-control" id="inputRootdir" placeholder="Mailboxes root directory" value:bind="rootdir">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-xs-offset-4 col-sm-6">
+            <button type="button" 
+                class="btn btn-primary {{#if isSaving}}disabled{{/if isSaving}}"
+                on:click="save(../onSuccess, ../onError)"
+                >Save</button>
+            <button type="button" class="btn btn-default" on:click="route()">Cancel</button>
+        </div>
+    </div>
+    </fieldset>
+    </can-template>
 </panel-form>
 {{/if}}
 </div>
