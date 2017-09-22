@@ -37,6 +37,11 @@
     </aside>
     </navigation-panel>
     <section class="main-content">
+        <div class="container-fluid card-layout>
+        {{#routeCurrent(page='transport',true)}}
+            <can-import from="components/transport">{{#isResolved}}<transport-panel />{{/isResolved}}</can-import>
+        {{/routeCurrent}}
+        </div>
     </section>
 {{else}}
     <can-import from="components/authorize" />
@@ -55,11 +60,11 @@
            <div class="login-wrap">
            <div class="form-group">
                <label for="inputAuthEmail" class="control-label">Email</label>
-               <input type="email" id="inputAuthEmail" class="form-control" required placeholder="Email" can-value="email">
+               <input type="email" id="inputAuthEmail" class="form-control" required placeholder="Email" value:bind="email">
            </div>
            <div class="form-group">
                <label for="inputAuthPass" class="control-label">Пароль</label>
-               <input type="password" id="inputAuthPass" class="form-control" required placeholder="Password" can-value="password">
+               <input type="password" id="inputAuthPass" class="form-control" required placeholder="Password" value:bind="password">
            </div>
            <div class="form-group">
                <button type="submit" class="btn btn-lg btn-primary btn-block {{#if isPending}}disabled{{/if}}">Send</button>
