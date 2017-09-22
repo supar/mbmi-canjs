@@ -1,37 +1,34 @@
 import component from 'can-component';
-import map from 'can-map';
+import map from 'can-define/map/map';
 import connect from 'can-connect';
 import dataUrl from 'can-connect/data/url/url';
 import constructor from 'can-connect/constructor/constructor';
 import parse from 'can-connect/data/parse/parse';
-import baseMap from 'can-connect/can/map/map';
+import canMap from 'can-connect/can/map/map';
 import error from 'util/error';
 
-import 'can-map-define';
-
 let login = map.extend({
-    define: {
-        '*': {
-            serialize: false
-        },
-        jwt: {
-            type: 'string'
-        },
-        email: {
-            serialize: true,
-            type: 'string'
-        },
-        password: {
-            serialize: true,
-            type: 'string'
-        }
+    '*': {
+        serialize: false
+    },
+    jwt: 'string',
+    email: {
+        serialize: true,
+        type: 'string'
+    },
+    password: {
+        serialize: true,
+        type: 'string'
     }
 });
 
 connect(
-    [ constructor, dataUrl, parse, baseMap ],
+    [ constructor, dataUrl, parse, canMap ],
     {
         Map: login,
+        // This is strange hook to prevent error
+        // while behavior initialized
+        List: function() {},
         parseInstanceProp: 'data',
         url: {
             createData: 'login',
@@ -50,11 +47,11 @@ export default component.extend({
             model.save().then(
                 // success
                 function(instance) {
-                    instance.attr('password', '');
+                    instance.set('password', '');
                 },
                 // fail
                 function(response) {
-                    model.attr('error', (new error(response)).Error());
+                    model.set('error', (new error(response)).Error());
                 }
             );
 
