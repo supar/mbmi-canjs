@@ -2,8 +2,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import './less/application.less!';
 
-import map from 'can-map';
-import 'can-map-define';
+import map from 'can-define/map/map';
 import route from 'can-route';
 import 'can-stache/helpers/route';
 
@@ -15,59 +14,51 @@ import session from './models/session';
 import tpl from './views/main.stache!';
 
 var AppModel = map.extend({
-    define: {
-        '*': {
-                serialize: false,
-        },
-
-        isAuthorized: {
-            get: function() {
-                return !!this.attr('session');
-            }
-        },
-
-        jwt: {
-            type: 'string',
-            set: function(val) {
-                sessionStorage.setItem('authkey', val);
-
-                if(!val && this.attr('session')) {
-                    this.removeAttr('session');
-                }
-            }
-        },
-
-        ready: {
-            type: 'boolean',
-            value: false
-        },
-
-        itemId: {
-            serialize: true,
-            type: 'number'
-        },
-
-        page: {
-            serialize: true,
-            type: 'string'
+    '*': {
+            serialize: false,
+    },
+    isAuthorized: {
+        get: function() {
+            return !!this.get('session');
         }
     },
+    jwt: {
+        type: 'string',
+        set: function(val) {
+            sessionStorage.setItem('authkey', val);
+    
+            if(!val && this.get('session')) {
+                this.removeAttr('session');
+            }
+        }
+    },
+    ready: 'boolean',
+    itemId: {
+        serialize: true,
+        type: 'number'
+    },
+    page: {
+        serialize: true,
+        type: 'string'
+    },
+    session: Object,
+
     initSession: function() {
         var me = this;
 
          session.get({}).then(function(response) {
              if(response && response['id']) {
-                 me.attr('session', response);
+                 me.set('session', response);
              }
 
-             me.attr('ready', true);
+             me.set('ready', true);
          }, function(response) {
-             me.attr('ready', true);
+             me.set('ready', true);
          });
     }
 });
 
-var Application = window.Applicatio = new AppModel({
+var Application = window.Application = new AppModel({
     jwt: sessionStorage.getItem('authkey')
 });
 // Remove loader
@@ -78,7 +69,7 @@ Application.bind('ready', function(ev, val) {
 // Set authorization key to each request
 $.ajax({
     beforeSend: function(xhr) {
-        var key = this.attr('jwt');
+        var key = this.get('jwt');
     
         if(key) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + key);
