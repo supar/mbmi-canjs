@@ -1,28 +1,14 @@
 import component from 'can-component';
-import map from 'can-map';
-
-import 'can-map-define';
+import map from 'can-define/map/map';
 
 let menu = map.extend({
-    define: {
-        visible: {
-            type: 'boolean',
-            value: false
-        },
-        items: {
-            value: [
-                { id: 'home', name: 'Home' },
-                { id: 'access', name: 'SMTP restrictions' },
-                { id: 'spam', name: 'Spam' },
-                { id: 'transport', name: "Transport" }
-            ]
-        },
-        winsize: {
-            type: 'number',
-            set: function(val) {
-                this.attr('visible', !this.isSmallScreen(val));
-                return val;
-            }
+    visible: 'boolean',
+    items: Array,
+    winsize: {
+        type: 'number',
+        set: function(val) {
+            this.set('visible', !this.isSmallScreen(val));
+            return val;
         }
     },
     isSmallScreen: function(val) {
@@ -34,7 +20,13 @@ export default component.extend({
     tag: "navigation-panel",
     viewModel:function(attr, parentScope) {
         return new menu({
-            app: parentScope
+            app: parentScope,
+            items: [
+                { id: 'home', name: 'Home' },
+                { id: 'access', name: 'SMTP restrictions' },
+                { id: 'spam', name: 'Spam' },
+                { id: 'transport', name: "Transport" }
+            ]
         });
     },
     events: {
@@ -48,16 +40,16 @@ export default component.extend({
 
         '.menu-toggle click': function() {
             var model = this.viewModel,
-                visible = model.attr('visible');
+                visible = model.get('visible');
 
-            model.attr('visible', !visible)
+            model.set('visible', !visible)
         },
 
         'ul.menu-panel a click': function() {
             var model = this.viewModel;
 
             if(model.isSmallScreen(this.screen())) {
-                model.attr('visible', false);
+                model.set('visible', false);
             }
         },
 
@@ -68,7 +60,7 @@ export default component.extend({
         },
 
         screen: function() {
-            this.viewModel.attr('winsize', $(window).width());
+            this.viewModel.set('winsize', $(window).width());
         }
     },
     helpers: {
@@ -77,8 +69,8 @@ export default component.extend({
 
             if(session) {
                 return [
-                    session.attr('login'),
-                    session.attr('domainname')
+                    session.get('login'),
+                    session.get('domainname')
                 ].join('@')
             }
             return null
@@ -86,7 +78,7 @@ export default component.extend({
         screen: function() {
             var model = this.viewModel;
 
-            model.attr('winsize', $(window).width())
+            model.set('winsize', $(window).width())
         }
     }
 });
