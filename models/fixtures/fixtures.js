@@ -272,9 +272,9 @@ import fixture from 'can-fixture';
                 });
             }
         },
-        'GET spam': function(request, response) {
-            var start = request.data.offset || 0,
-                end = start + (request.data.limit || data.length);
+        'GET spams': function(request, response) {
+            var start = request.data['offset'] || 0,
+                end = start + (request.data['limit'] || spamData.length);
 
             response(200, {
                 count: spamData.length,
