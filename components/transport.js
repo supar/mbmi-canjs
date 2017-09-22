@@ -28,7 +28,7 @@ connect(
         List: transport.List,
         parseInstanceProp: 'data',
         url: {
-            createData: 'transport/{id}',
+            createData: 'transport',
             destroyData: 'transport/{id}',
             getData: 'transport/{id}',
             getListData: 'transports',

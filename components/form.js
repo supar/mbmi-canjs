@@ -20,9 +20,7 @@ let model = map.extend({
                     then(setAttr, onError(model));
             }
 
-            return new store({
-                id: 0
-            });
+            return new store({});
         }
     }
 });
