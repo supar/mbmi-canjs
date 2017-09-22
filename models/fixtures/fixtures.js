@@ -339,6 +339,8 @@ import fixture from 'can-fixture';
                     transport: data['transport'] || 'virtaul',
                     rootdir: data['rootdir'] || '/var/mail'
                 });
+
+                data['id'] = maxId;
             } catch(err) {
                 response(err.code, {
                     success: false,
@@ -349,7 +351,8 @@ import fixture from 'can-fixture';
             }
 
             response(200, {
-                success: true
+                success: true,
+                data: data
             });    
         },
         'PUT transport/{id}': function(request, response) {
@@ -392,7 +395,8 @@ import fixture from 'can-fixture';
             }
 
             response(200, {
-                success: true
+                success: true,
+                data: data
             });    
         },
     });
