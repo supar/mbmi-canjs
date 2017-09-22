@@ -1,0 +1,26 @@
+<div class="panel panel-default">
+<div class="panel-heading">{{title}}</div>
+{{#if error}}
+   <div class="panel-body">
+       <div class="alert alert-danger" role="alert">{{error}}</div>
+   </div>
+{{/if}}
+{{#if isGrid()}}
+<can-import from="../components/grid" />
+<panel-grid api:from="api" error:to="error">
+    <can-template name="grid-body-row">
+    {{^isPending}}
+    {{#this}}
+    <tr row-index="{{%index}}">
+        <td data-title="Host">{{from}}</td>
+        <td data-title="IP">{{ip}}</td>
+        <td data-title="Attempts">{{attempt}}</td>
+        <td data-title="Index">{{indexRound}}</td>
+    </tr>
+    {{/this}}
+    {{/isPending}}
+    </can-template>
+</panel-grid>
+{{/if}}
+</div>'
+
