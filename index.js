@@ -28,7 +28,9 @@ var AppModel = map.extend({
             sessionStorage.setItem('authkey', val);
     
             if(!val && this.get('session')) {
-                this.removeAttr('session');
+                this.set({
+                    session: undefined
+                });
             }
         }
     },
