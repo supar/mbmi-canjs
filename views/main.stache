@@ -38,6 +38,9 @@
     </navigation-panel>
     <section class="main-content">
         <div class="container-fluid card-layout>
+        {{#routeCurrent(page='access',true)}}
+            <can-import from="components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
+        {{/routeCurrent}}
         {{#routeCurrent(page='spam',true)}}
             <can-import from="components/spam">{{#isResolved}}<spam-panel />{{/isResolved}}</can-import>
         {{/routeCurrent}}

@@ -202,7 +202,8 @@ import fixture from 'can-fixture';
             }
 
             response(200, {
-                success: true
+                success: true,
+                data: data
             });    
         },
         'POST access': function(request, response) {
@@ -229,11 +230,12 @@ import fixture from 'can-fixture';
                 
                 maxId++;
     
-                data.id = maxId;
+                data['id'] = maxId;
                 accessData.push(data);
 
                 response(200, {
-                    success: true
+                    success: true,
+                    data: data
                 });
             }
             catch (err) {
@@ -242,7 +244,6 @@ import fixture from 'can-fixture';
                     error: err.message
                 });
             }
-
         },
         'DELETE access/{id}': function(request, response) {
             var id = request.data.id,
@@ -255,14 +256,15 @@ import fixture from 'can-fixture';
                 }
 
                 for(var i in accessData) {
-                    if(a = accessData[i], a.id == id) {
+                    if(accessData[i].id == id) {
                         accessData.splice(i, 1);
                         break;
                     }
                 }
 
                 response(200, {
-                    success: true
+                    success: true,
+                    data: data
                 });
             }
             catch (err) {
@@ -341,6 +343,11 @@ import fixture from 'can-fixture';
                 });
 
                 data['id'] = maxId;
+
+                response(200, {
+                    success: true,
+                    data: data
+                });    
             } catch(err) {
                 response(err.code, {
                     success: false,
@@ -349,11 +356,6 @@ import fixture from 'can-fixture';
 
                 return;
             }
-
-            response(200, {
-                success: true,
-                data: data
-            });    
         },
         'PUT transport/{id}': function(request, response) {
             var auth = Authorize(),

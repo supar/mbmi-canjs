@@ -1,0 +1,71 @@
+<div class="panel panel-default">
+<div class="panel-heading">{{title}}</div>
+{{#if error}}
+    <div class="panel-body">
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+    </div>
+{{/if}}
+{{#if isGrid()}}
+<div class="panel-body">
+    <div role="toolbar" role="toolbar">
+        <div class="btn-group" role="group">
+           <button type="button" class="btn btn-primary btn-sm" on:click="route(0)">New restriction</button>
+        </div>
+    </div>
+</div>
+<can-import from="../components/grid" />
+<panel-grid api:from="api" error:to="error">
+    <can-template name="grid-body-row">
+    {{^isPending}}
+    {{#this}}
+    <tr on:click="route({{id}}, %scope)">
+        <td data-title="Host / IP">{{client}}</td>
+        <td data-title="Restriction">{{access}}</td>
+    </tr>
+    {{/this}}
+    {{/isPending}}
+    </can-template>
+</panel-grid>
+{{/if}}
+{{#if isForm()}}
+<can-import from="../components/form" />
+<panel-form panel:from="this">
+    <can-template name="form-body">
+    <fieldset>
+    <input type="hidden" value:bind="id">
+    <div class="form-group">
+        <label for="inputHost" class="col-sm-4 control-label">Host / IP</label>
+        <div class="col-sm-4">
+            <input type="input" class="form-control" id="inputHost" placeholder="Host / IP" value:bind="client">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAccess" class="col-sm-4 control-label">Access</label>
+        <div class="col-sm-4">
+            <select class="form-control" id="inputAccess" value:bind="access">
+                {{#../accesses}}
+                <option {{#is ./access .}}selected{{/is}}>{{.}}</option>
+                {{/../accesses}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-12 text-center form-grou-buttons">
+            <button type="button" 
+                class="btn btn-success {{#if isSaving}}disabled{{/if isSaving}}"
+                on:click="save(../onSuccess, ../onError)"
+                >Save</button>
+            <button type="button" class="btn btn-default" on:click="route()">Cancel</button>
+            {{^if isNew()}}<button type="button"
+                class="btn btn-danger"
+                on:click="destroy(../onSuccess, ../onError)"
+                >Remove</button>{{/if}}
+            </div>
+        </div>
+    </div>
+    </fieldset>
+    </can-template>
+</panel-form>
+{{/if}}
+</div>
