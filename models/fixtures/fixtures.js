@@ -1,9 +1,9 @@
 import fixture from 'can-fixture';
 
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1" },
-            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2" },
-            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3" },
+            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1", manager: 0 },
+            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2", manager: 0 },
+            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3", manager: 1 },
         ],
 
         accessData = [

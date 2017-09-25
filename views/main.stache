@@ -29,7 +29,7 @@
     <aside>
     <div class="nav-panel {{^visible}}hidden{{/visible}}">
        <ul class="menu-panel">
-       {{#each items}}
+       {{#each roleFilter(0)}}
            <li class=""><a class="{{#routeCurrent(page=id,true)}}active{{/routeCurrent}}" href="#!{{id}}"><span>{{name}}</span></a></li>
        {{/each}}
        </ul>

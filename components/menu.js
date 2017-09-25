@@ -22,10 +22,10 @@ export default component.extend({
         return new menu({
             app: parentScope,
             items: [
-                { id: 'home', name: 'Home' },
-                { id: 'access', name: 'SMTP restrictions' },
-                { id: 'spam', name: 'Spam' },
-                { id: 'transport', name: "Transport" }
+                { id: 'home', name: 'Home', role: 0 },
+                { id: 'access', name: 'SMTP restrictions', role: 1 },
+                { id: 'spam', name: 'Spam', role: 1 },
+                { id: 'transport', name: 'Transport', role: 1 }
             ]
         });
     },
@@ -74,6 +74,16 @@ export default component.extend({
                 ].join('@')
             }
             return null
+        },
+        roleFilter: function() {
+            var session = this.app.get('session.manager') || 0,
+                items = this.get('items'),
+                fn = function(item) {
+                    return (item.role == 0 || 
+                        item.role == session);
+                };
+
+            return items.filter(fn)
         },
         screen: function() {
             var model = this.viewModel;

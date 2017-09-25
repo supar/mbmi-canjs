@@ -4,5 +4,6 @@ export default map.extend({
     id: 'number',
     domainname: 'string',
     login: 'string',
+    manager: 'number',
     password: 'string'
 });
