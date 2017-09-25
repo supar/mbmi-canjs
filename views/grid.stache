@@ -1,5 +1,6 @@
 <div masked>
     <table class="table table-data table-responsive-condense">
+        <can-slot name="grid-head" />
         <tbody>
             <can-slot name="grid-body-row" this:from="gridData" />
         </tbody>

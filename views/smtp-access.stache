@@ -15,6 +15,14 @@
 </div>
 <can-import from="../components/grid" />
 <panel-grid api:from="api" error:to="error">
+    <can-template name="grid-head">
+        <thead>
+            <tr>
+                <th>Host / IP</th>
+                <th>Restriction</th>
+            </tr>
+        </thead>
+    </can-template>
     <can-template name="grid-body-row">
     {{^isPending}}
     {{#this}}

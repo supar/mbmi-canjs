@@ -8,6 +8,16 @@
 {{#if isGrid()}}
 <can-import from="../components/grid" />
 <panel-grid api:from="api" error:to="error">
+    <can-template name="grid-head">
+        <thead>
+            <tr>
+                <th>Host</th>
+                <th>IP</th>
+                <th>Attempts</th>
+                <th>Index</th>
+            </tr>
+        </thead>
+    </can-template>
     <can-template name="grid-body-row">
     {{^isPending}}
     {{#this}}
