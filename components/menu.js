@@ -13,6 +13,15 @@ let menu = map.extend({
     },
     isSmallScreen: function(val) {
         return (val <= 768);
+    },
+    itemAccess: function(id, role) {
+        var id = id || '',
+            role = role || 0,
+            items = this.get('items');
+
+        return !!items.find(function(item) {
+            return (item.id == id && item.role == role);
+        });
     }
 });
 

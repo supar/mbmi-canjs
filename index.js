@@ -13,7 +13,7 @@ import 'models/fixtures/fixtures';
 import session from './models/session';
 import tpl from './views/main.stache!';
 
-var AppModel = map.extend({
+let AppModel = map.extend({
     '*': {
             serialize: false,
     },
@@ -57,6 +57,9 @@ var AppModel = map.extend({
          }, function(response) {
              me.set('ready', true);
          });
+    },
+    cunrrent: function() {
+        
     }
 });
 
@@ -79,14 +82,27 @@ $.ajax({
     }.bind(Application)
 });
 
+// Register route helper
+let routeWithAccess = function(str) {
+    let options = Array.prototype.slice.call(arguments, -1)[0],
+        access = options.scope.get('session.manager') || 0,
+        check = options.scope.get('*menu.itemAccess') || function() { return false },
+        id = route.data.get('page');
+
+    if(str === id && check(id, access)) {
+        return options.fn(this);
+    }
+};
+
 // Configure routes map
 route.data = Application;
 route('{page}');
 route('{page}/{itemId}');
+route.ready();
 
 // Render template
-$('body').append(tpl(Application));
-
+$('body').append(tpl(Application, {
+    'routing': routeWithAccess
+}));
 // Start application
 Application.initSession();
-route.ready();

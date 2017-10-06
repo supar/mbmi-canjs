@@ -2,7 +2,7 @@
 <div class="main">
 {{#if isAuthorized}}
     <can-import from="components/menu" />
-    <navigation-panel>
+    <navigation-panel vm:this:to="*menu">
     <header class="header">
        <div class="container-fluid nav-row">
            <div>
@@ -38,15 +38,15 @@
     </navigation-panel>
     <section class="main-content">
         <div class="container-fluid card-layout>
-        {{#routeCurrent(page='access',true)}}
+        {{#routing 'access'}}
             <can-import from="components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
-        {{/routeCurrent}}
-        {{#routeCurrent(page='spam',true)}}
+        {{/routing}}
+        {{#routing 'spam'}}
             <can-import from="components/spam">{{#isResolved}}<spam-panel />{{/isResolved}}</can-import>
-        {{/routeCurrent}}
-        {{#routeCurrent(page='transport',true)}}
+        {{/routing}}
+        {{#routing 'transport'}}
             <can-import from="components/transport">{{#isResolved}}<transport-panel />{{/isResolved}}</can-import>
-        {{/routeCurrent}}
+        {{/routing}}
         </div>
     </section>
 {{else}}
