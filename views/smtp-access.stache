@@ -59,12 +59,19 @@
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-sm-12 text-center form-grou-buttons">
+            <div class="col-sm-12 text-center form-group-buttons">
             <button type="button" 
                 class="btn btn-success {{#if isSaving}}disabled{{/if isSaving}}"
                 on:click="save(../onSuccess, ../onError)"
                 >Save</button>
             <button type="button" class="btn btn-default" on:click="route()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </fieldset>
+    <div class="panel panel-danger">
+        <div class="panel-body">
+            <div class="col-sm-12 text-center form-group-buttons">
             {{^if isNew()}}<button type="button"
                 class="btn btn-danger"
                 on:click="destroy(../onSuccess, ../onError)"
@@ -72,7 +79,6 @@
             </div>
         </div>
     </div>
-    </fieldset>
     </can-template>
 </panel-form>
 {{/if}}
