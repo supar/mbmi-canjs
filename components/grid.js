@@ -25,7 +25,11 @@ let model = map.extend({
                             count: response.count
                         });
                     }
+
                     setAttr(response);
+
+                    // Load is completed
+                    store.dispatch('load', [ response ]);
                 });
             }
         },
