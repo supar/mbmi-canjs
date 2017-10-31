@@ -1,0 +1,62 @@
+<div class="panel panel-default">
+<div class="panel-heading">{{title}}</div>
+{{#if error}}
+    <div class="panel-body">
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+    </div>
+{{/if}}
+<can-import from="../components/grid" />
+<div class="panel-body">
+    <div role="toolbar">
+        <div class="input-group" role="group">
+            <span class="input-group-btn">
+                {{#isViewSmall}}
+                <button type="button" class="btn btn-primary" on:click="doToggle">Groups</button>
+                {{/isViewSmall}}
+                <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
+            </span>
+            <input type="text" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+<div class="row row-offcanvas row-offcanvas-right {{#toggle}}active{{/toggle}}">
+    <div class="col-xs-12 col-sm-9 col-sm-push-3">
+        <div class="container-fluid">
+        {{#if groupSelected}}
+        <panel-grid api:from="api" filter:from="aliasFilter">
+            <can-template name="grid-head">
+                <thead>
+                    <tr>
+                        <th>Recepient</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+            </can-template>
+            <can-template name="grid-body-row">
+            {{^isPending}}{{#this}}
+            <tr>
+                <td data-title="Recepient">{{recepient}}</td>
+                <td data-title="Comment">{{comment}}</td>
+            </tr>
+            {{/this}}{{/isPending}}
+            </can-template>
+        </panel-grid>
+        {{/if}}
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
+        <ul class="list-group">
+            <panel-grid api:from="groups" listView:from="listView" pagination:from="pagination">
+            <can-template name="grid-body-row">
+            {{^isPending}}{{#this}}
+            <li class="list-group-item {{#isGroupActive}}active{{/isGroupActive}}" on:click="activeGroup">{{name}}</li>
+            {{/this}}{{/isPending}}
+            </can-template>
+            </panel-grid>
+        </ul>
+    </div>
+</div>
+</div>
+
+</div>
