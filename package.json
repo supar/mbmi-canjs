@@ -5,16 +5,16 @@
     "main": "index.js",
     "dependencies": {
         "bootstrap": "3.3.7",
-        "can-component": "3.3.4",
+        "can-component": "3.3.6",
         "can-connect": "1.5.9",
-        "can-define": "1.4.5",
+        "can-define": "1.5.3",
         "can-route": "3.2.3",
-        "can-stache": "3.6.2",
+        "can-stache": "3.13.0",
         "jquery": "3.2.1",
         "steal": "^1.5.13"
     },
     "devDependencies": {
-        "can-fixture": "1.1.0",
+        "can-fixture": "1.1.1",
         "steal-tools": "^1.8.3",
         "steal-css": "1.2.5",
         "steal-less": "1.2.0",

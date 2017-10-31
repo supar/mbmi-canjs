@@ -86,7 +86,7 @@ $.ajax({
 let routeWithAccess = function(str) {
     let options = Array.prototype.slice.call(arguments, -1)[0],
         access = options.scope.get('session.manager') || 0,
-        check = options.scope.get('*menu.itemAccess') || function() { return false },
+        check = options.scope.get('scope.vars.menu.itemAccess') || function() { return false },
         id = route.data.get('page');
 
     if(str === id && check(id, access)) {

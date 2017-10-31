@@ -18,16 +18,24 @@ let model = map.extend({
                 if(filter && typeof filter == "object") {
                     params = $.extend(params, filter.get());
                 }
-        
+
                 return store.getList(params).then(function(response) {
                     if(pages) {
-                        model.set('count', response.count);
+                        model.assign({
+                            count: response.count
+                        });
                     }
                     setAttr(response);
                 });
             }
         },
-        // Pagination
+        // Don't use table tags
+        // by default false
+        listView: {
+            type: 'boolean',
+            value: false
+        },
+        // Show pagination panel
         pagination: {
             type: 'boolean',
             value: true
@@ -59,7 +67,9 @@ let model = map.extend({
                 return Math.floor(this.get('offset') / this.get('limit')) + 1;
             },
             set: function(newVal) {
-                this.set('offset', (parseInt(newVal, 10) - 1) * this.get('limit'));
+                this.assign({
+                    offset: (parseInt(newVal, 10) - 1) * this.get('limit')
+                });
             }
         },
         limitSizes: function() {
@@ -68,11 +78,15 @@ let model = map.extend({
             ];
         },
         prev: function() {
-            this.set('offset', this.offset - this.limit);
+            this.assign({
+                offset: this.offset - this.limit
+            });
         },
         next: function() {
             if(this.canNext()) {
-                this.set('offset', this.offset + this.limit);
+                this.assign({
+                    offset: this.offset + this.limit
+                });
             }
         },
         canPrev: function() {
