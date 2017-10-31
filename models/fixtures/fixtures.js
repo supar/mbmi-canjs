@@ -35,6 +35,17 @@ import fixture from 'can-fixture';
         transportData = [
             { id: "1", domain: "domain.com", transport: "virtual", rootdir: "/var/mail" },
             { id: "2", domain: "example.com", transport: "virtual", rootdir: "/var/mail" }
+        ],
+        
+        aliasData = [
+            {id: 1, alias: "a_group@domain.com", recepient: "some_1@domain.com", comment: "Any text 1" },
+            {id: 2, alias: "a_group@domain.com", recepient: "some_2@domain.com", comment: "Any text 2" },
+            {id: 3, alias: "b_group@domain.com", recepient: "some_1@domain.com", comment: "Any text 3" },
+            {id: 4, alias: "b_group@domain.com", recepient: "some_3@domain.com", comment: "Any text 4" },
+            {id: 5, alias: "f_group@domain.com", recepient: "any_1@extenal.com", comment: "Any text ext-text" },
+            {id: 6, alias: "f_group@domain.com", recepient: "any_2@extenal.com", comment: "Any text ext-text" },
+            {id: 7, alias: "f_group@domain.com", recepient: "any_3@extenal.com", comment: "Any text ext-text" },
+            {id: 8, alias: "f_group@domain.com", recepient: "any_4@extenal.com", comment: "Any text ext-text" },
         ];
 
     fixture({
@@ -401,6 +412,71 @@ import fixture from 'can-fixture';
                 data: data
             });    
         },
+        'GET aliases': function(request, response) {
+            var start = request.data['offset'] || 0,
+                end = start + (request.data['limit'] || aliastData.length),
+                alias = request.data['alias'] || '',
+                items = [];
+
+            for(var i in aliasData) {
+                if(aliasData[i].alias != alias) {
+                    continue;
+                }
+
+                items.push(aliasData[i]);
+            }
+
+            response(200, {
+                count: items.length,
+                data: items.slice(start, end)
+            });
+        },
+        'GET alias/{id}': function(request, response) {
+            var id = request.data.id,
+                item = {};
+
+            for(var i in aliasData) {
+                var a = aliasData[i];
+
+                if(id == 'groups') {
+                    if(item[a.alias]) {
+                        continue;
+                    }
+
+                    item[a.alias] = {
+                        name: a.alias
+                    };
+                }
+                else {
+                    if(a.id == id) {
+                        item = a;
+                        break;
+                    }
+                }
+            }
+
+            if(item) {
+                if(id == 'groups') {
+                    var itemTmp = [];
+
+                    for(var i in item){
+                        itemTmp.push(item[i]);
+                    }
+
+                    item = itemTmp;
+                }
+
+                response(200, {
+                    success: true,
+                    data: item
+                });
+            } else {
+                response(404, {
+                    success: false,
+                    error: 'Unknown item'
+                });
+            }
+        }
     });
 
     function Authorize() {

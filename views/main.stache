@@ -2,7 +2,7 @@
 <div class="main">
 {{#if isAuthorized}}
     <can-import from="components/menu" />
-    <navigation-panel vm:this:to="*menu">
+    <navigation-panel vm:this:to="scope.vars.menu">
     <header class="header">
        <div class="container-fluid nav-row">
            <div>
@@ -37,7 +37,10 @@
     </aside>
     </navigation-panel>
     <section class="main-content">
-        <div class="container-fluid card-layout>
+        <div class="container-fluid card-layout">
+        {{#routing 'alias'}}
+            <can-import from="components/alias">{{#isResolved}}<alias-panel />{{/isResolved}}</can-import>
+        {{/routing}}
         {{#routing 'access'}}
             <can-import from="components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
         {{/routing}}

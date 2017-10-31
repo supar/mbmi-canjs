@@ -16,7 +16,7 @@ export default map.extend(
     {
         seal: true
     }, {
-        api: 'Object',
+        api: 'observable',
         error: 'string',
         title: 'string',
 

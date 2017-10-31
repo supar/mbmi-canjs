@@ -32,6 +32,7 @@ export default component.extend({
             app: parentScope,
             items: [
                 { id: 'home', name: 'Home', role: 0 },
+                { id: 'alias', name: 'Virtual box (alias)', role: 1 },
                 { id: 'access', name: 'SMTP restrictions', role: 1 },
                 { id: 'spam', name: 'Spam', role: 1 },
                 { id: 'transport', name: 'Transport', role: 1 }

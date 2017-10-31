@@ -1,27 +1,31 @@
 <div masked>
+    {{^listView}}
     <table class="table table-data table-responsive-condense">
         <can-slot name="grid-head" />
         <tbody>
             <can-slot name="grid-body-row" this:from="gridData" />
         </tbody>
     </table>
+    {{else}}
+        <can-slot name="grid-body-row" this:from="../gridData" />
+    {{/listView}}
     {{#if pagination}}
     <div class="panel-footer">
         <div class="row">
-        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 panel-page-info">
-            {{entryFirst}} to {{entryNext}} of {{count}} entries
+        <div class="col-xs-12 col-md-4 panel-page-info">
+            {{entryFirst()}} to {{entryNext()}} of {{count}} entries
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7">
+        <div class="col-xs-12 col-md-4">
         <ul class="pager">
-            <li class="previous {{^canPrev}}disabled{{/canPrev}}"><a href="javascript://" on:click="prev()">&larr;</a></li>
+            <li class="previous {{^canPrev()}}disabled{{/canPrev()}}"><a href="javascript://" on:click="prev()">&larr;</a></li>
             <li>{{page}}</li>
-        <li class="next {{^canNext}}disabled{{/canNext}}"><a href="javascript://" on:click="next()">&rarr;</a></li>
+        <li class="next {{^canNext()}}disabled{{/canNext()}}"><a href="javascript://" on:click="next()">&rarr;</a></li>
         </ul>
         </div>
-        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 panel-page-limit">
-            <select class="form-control page-limit-control" value:bind="limit">
+        <div class="col-xs-12 col-md-4 panel-page-limit">
+            <select class="form-control page-limit-control pull-right" value:bind="limit">
                 {{#each limitSizes}}
-                <option {{#is limit .}}selected{{/is}}>{{.}}</option>
+                <option {{#is ../limit .}}selected{{/is}}>{{.}}</option>
                 {{/each}}
             </select>
         </div>
