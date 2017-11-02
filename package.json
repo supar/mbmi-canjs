@@ -23,6 +23,7 @@
     "steal": {
         "bundle": [
             "components/authorize",
+            "components/alias",
             "components/menu",
             "components/transport"
         ],
