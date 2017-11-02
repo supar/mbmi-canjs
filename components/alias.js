@@ -11,49 +11,45 @@ import tpl from '../views/alias.stache!';
 import panel from '../models/panel';
 
 // Define alias list
-let alias = map.extend({
+let Alias = map.extend({
     id: 'number',
     alias: 'string',
     recipient: 'string',
     comment: 'string'
 });
 
-alias.List = list.extend({
-    '#': alias
+Alias.List = list.extend({
+    '#': Alias
 });
 
 connect(
     [ constructor, dataUrl, parse, baseMap ],
     {
-        Map: alias,
-        List: alias.List,
+        Map: Alias,
+        List: Alias.List,
         parseInstanceProp: 'data',
         url: {
             getListData: 'aliases'
         }
     });
 
-// Define alias groups
-let aliasGroup = map.extend({
-    name: 'string'
+// Extend alias model to retrieve groups alias data
+let Group = map.extend({
+    alias: 'string'
 });
 
-aliasGroup.List = list.extend({
-    '#': aliasGroup
+Group.List = list.extend({
+    '#': Group
 });
-
-aliasGroup.addEventListener('load', function() {
-    console.log('load')
-})
 
 connect(
     [ constructor, dataUrl, parse, baseMap ],
     {
-        Map: aliasGroup,
-        List: aliasGroup.List,
+        Map: Group,
+        List: Group.List,
         parseInstanceProp: 'data',
         url: {
-            getListData: 'alias/groups'
+            getListData: 'aliases/groups'
         }
     });
 
@@ -62,17 +58,22 @@ let panelExt = panel.extend({
     aliasFilter: {
         Value: map
     },
-    groups: 'observable',
-    groupSelected: {
-        type: 'observable',
-        set: function(newVal) {
-            var name;
-            
-            if(newVal && (name = newVal.get('name'))) {
-                this.aliasFilter.update({
-                    alias: name
-                });
+    groupFilter: {
+        Value: map.extend({
+            recepient: 'string',
+            group: {
+                type: 'number',
+                value: 1
             }
+        })
+    },
+    groupSelected: {
+        type: 'string',
+        set: function(newVal) {
+            this.aliasFilter.update({
+                alias: newVal,
+                recepient: this.groupFilter.get('recepient')
+            });
 
             return newVal
         }
@@ -85,6 +86,11 @@ let panelExt = panel.extend({
         type: 'boolean',
         value: false
     },
+    search: 'string',
+    title: {
+        type: 'string',
+        value: 'Mail box aliases'
+    },
     toggle: {
         type: 'boolean',
         value: false
@@ -93,7 +99,7 @@ let panelExt = panel.extend({
     winsmall: 'boolean',
 
     activeGroup: function(item) {
-        this.groupSelected = item;
+        this.groupSelected = item.get('alias');
     },
 
     doToggle: function() {
@@ -115,9 +121,8 @@ export default component.extend({
     view: tpl,
     viewModel: function(attr, parentScope) {
         return new panelExt({
-            api: alias,
-            groups: aliasGroup,
-            title: "Mail box aliases"
+            api: Alias,
+            group: Group
         });
     },
     events: {
@@ -126,16 +131,34 @@ export default component.extend({
         },
 
         // Select first record when load is completed
-        '{groups} load': function(arg, e, response) {
-            var group = undefined;
+        '{group} load': function(arg, e, response) {
+            var model = this.viewModel,
+                found = false,
+                group = model.get('groupSelected');
+                
 
             if(response.length > 0) {
-                group = response.get(0)
+                if(group) {
+                    response.forEach(function(item) {
+                        if(item.get('alias') == group) {
+                            found = true;
+                            return false;
+                        }
+                    });
+                }
+
+                if(!found) {
+                    group = response.get(0).get('alias')
+                }
             }
 
-            this.viewModel.assign({
-                groupSelected: group
-            });
+            model.groupSelected = group;
+        },
+
+        '{viewModel} search': function(model, e, value) {
+            model.groupFilter.assign({
+                recepient: value
+            })
         },
 
         '{window} resize': function() {
@@ -158,7 +181,9 @@ export default component.extend({
             return options.inverse();
         },
         isGroupActive: function(options) {
-            if(options.context == this.groupSelected){
+            var alias = options.context.get('alias');
+
+            if(alias == this.groupSelected){
                 return options.fn();
             }
 

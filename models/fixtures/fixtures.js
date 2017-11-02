@@ -48,436 +48,6 @@ import fixture from 'can-fixture';
             {id: 8, alias: "f_group@domain.com", recepient: "any_4@extenal.com", comment: "Any text ext-text" },
         ];
 
-    fixture({
-        'GET user/me': function(request, response) {
-            var auth = Authorize(),
-                data = null;
-
-            try {
-                if(auth == false) {
-                    throw new AuthError();
-                }
-
-                for(var i in loginData) {
-                    if(loginData[i]["jwt"] == auth.jwt) {
-                        data = loginData[i]
-                    }
-                }
-
-                if(data == null) {
-                    throw new AuthError()
-                }
-                response(200, {
-                    success: true,
-                    data: auth
-                });
-            } catch(err) {
-                response(err.code, {
-                    error: err.message
-                });
-            }
-        },
-        'POST login': function(request, response) {
-            var data = request.data,
-                auth = getCookie('authsess'),
-                authSess;
-            
-            try {
-                if(!data['email']) {
-                    throw new Error('Empty login value');
-                }
-            
-                if(!data['password']) {
-                    throw new Error('Empty password value');
-                }
-
-                for(var i in loginData) {
-                    if([loginData[i].login, loginData[i].domainname].join('@') == data['email'] && loginData[i].password == data['password']) {
-                        authSess = {
-                            jwt: loginData[i].jwt
-                        };
-                        break;
-                    }
-                }
-                
-                if(!authSess) {
-                    throw new Error('Unknown manager');
-                }
-
-                response(200, {
-                    success: true,
-                    data: authSess
-                });
-            }
-            catch (err) {
-                response(401, {
-                    success: false,
-                    error: {
-                        code: 401,
-                        message: err.message
-                    }
-                });
-            }
-
-        },
-        'DELETE user/logout': function(request, response) {
-            sessionStorage.removeItem('authkey');
-            response(401);
-        },
-        'GET accesses': function(request, response) {
-            var auth = Authorize(),
-                start = request.data.offset || 0,
-                end = start + (request.data.limit || data.length);
-
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-                response(200, {
-                    count: accessData.length,
-                    data: accessData.slice(start, end)
-                });
-            }
-            catch(err) {
-                response(err.code, {
-                    error: err.message,
-                    success: false
-                });
-            }
-        },
-        'GET access/{id}': function(request, response) {
-            var id = request.data.id,
-                item, a;
-
-            for(var i in accessData) {
-                if(a = accessData[i], a.id == id) {
-                    item = a;
-                    break;
-                }
-            }
-
-            if(item) {
-                response(200, {
-                    success: true,
-                    data: item
-                });
-            } else {
-                response(404, {
-                    success: false,
-                    error: 'Unknown item'
-                });
-            }
-        },
-        'PUT access/{id}': function(request, response) {
-            var auth = Authorize(),
-                data = request.data,
-                done = false;
-
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-
-                if(!data['id']) {
-                    throw new RespError('Unknown item');
-                }
-
-                if(data['access'] != 'REJECT' && data['access'] != 'OK') {
-                    throw new RespError('Unknown access value');
-                }
-
-                if(!data['client']) {
-                    throw new RespError('Empty client value');
-                }
-
-                for(var i in accessData) {
-                    if(accessData[i].id == data.id) {
-                        accessData[i].client = data.client;
-                        accessData[i].access = data.access;
-
-                        done = true;
-                        break;
-                    }
-                }
-
-                if(!done) {
-                    throw new Error('Unknown item');
-                }
-            } catch(err) {
-                response(err.code, {
-                    success: false,
-                    error: err.message
-                });
-
-                return;
-            }
-
-            response(200, {
-                success: true,
-                data: data
-            });    
-        },
-        'POST access': function(request, response) {
-            var auth = Authorize(),
-                data = request.data,
-                maxId = 0;
-            
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-
-                if(!data['client']) {
-                    throw new RespError('Empty client value');
-                }
-            
-                if(data['access'] != 'REJECT' && data['access'] != 'OK') {
-                    throw new RespError('Unknown access value');
-                }
-
-                for(var i in accessData) {
-                    maxId = accessData[i].id > maxId ? accessData[i].id : maxId;
-                }
-                
-                maxId++;
-    
-                data['id'] = maxId;
-                accessData.push(data);
-
-                response(200, {
-                    success: true,
-                    data: data
-                });
-            }
-            catch (err) {
-                response(err.code, {
-                    success: false,
-                    error: err.message
-                });
-            }
-        },
-        'DELETE access/{id}': function(request, response) {
-            var id = request.data.id,
-                auth = Authorize(),
-                data = request.data;
-            
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-
-                for(var i in accessData) {
-                    if(accessData[i].id == id) {
-                        accessData.splice(i, 1);
-                        break;
-                    }
-                }
-
-                response(200, {
-                    success: true,
-                    data: data
-                });
-            }
-            catch (err) {
-                response(err.code, {
-                    success: false,
-                    error: err.message
-                });
-            }
-        },
-        'GET spams': function(request, response) {
-            var start = request.data['offset'] || 0,
-                end = start + (request.data['limit'] || spamData.length);
-
-            response(200, {
-                count: spamData.length,
-                data: spamData.slice(start, end)
-            });
-        },
-        'GET transports': function(request, response) {
-            var start = request.data['offset'] || 0,
-                end = start + (request.data['limit'] || transportData.length);
-
-            response(200, {
-                count: transportData.length,
-                data: transportData.slice(start, end)
-            });
-        },
-        'GET transport/{id}': function(request, response) {
-            var id = request.data.id,
-                item, a;
-
-            for(var i in transportData) {
-                if(a = transportData[i], a.id == id) {
-                    item = a;
-                    break;
-                }
-            }
-
-            if(item) {
-                response(200, {
-                    success: true,
-                    data: item
-                });
-            } else {
-                response(404, {
-                    success: false,
-                    error: 'Unknown item'
-                });
-            }
-        },
-        'POST transport': function(request, response) {
-            var auth = Authorize(),
-                data = request.data,
-                maxId = 0;
-
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-
-                if(!data['domain']) {
-                    throw new RespError('Empty domain value');
-                }
-
-                for(var i in transportData) {
-                    maxId = transportData[i].id > maxId ? transportData[i].id : maxId;
-                }
-                
-                maxId++;
-    
-                transportData.push({
-                    id: maxId,
-                    domain: data['domain'] || '',
-                    transport: data['transport'] || 'virtaul',
-                    rootdir: data['rootdir'] || '/var/mail'
-                });
-
-                data['id'] = maxId;
-
-                response(200, {
-                    success: true,
-                    data: data
-                });    
-            } catch(err) {
-                response(err.code, {
-                    success: false,
-                    error: err.message
-                });
-
-                return;
-            }
-        },
-        'PUT transport/{id}': function(request, response) {
-            var auth = Authorize(),
-                data = request.data,
-                done = false;
-
-            try {
-                if(!auth) {
-                    throw new AuthError();
-                }
-
-                if(!data['id']) {
-                    throw new RespError('Unknown item');
-                }
-
-                for(var i in transportData) {
-                    if(transportData[i].id == data.id) {
-                        transportData[i] = {
-                            id: data['id'],
-                            domain: data['domain'] || transportData[i].domain,
-                            transport: data['transport'] || transportData[i].transport,
-                            rootdir: data['rootdir'] || transportData[i].rootdir
-                        };
-                        done = true;
-                        break;
-                    }
-                }
-
-                if(!done) {
-                    throw new Error('Unknown item');
-                }
-            } catch(err) {
-                response(err.code, {
-                    success: false,
-                    error: err.message
-                });
-
-                return;
-            }
-
-            response(200, {
-                success: true,
-                data: data
-            });    
-        },
-        'GET aliases': function(request, response) {
-            var start = request.data['offset'] || 0,
-                end = start + (request.data['limit'] || aliastData.length),
-                alias = request.data['alias'] || '',
-                items = [];
-
-            for(var i in aliasData) {
-                if(aliasData[i].alias != alias) {
-                    continue;
-                }
-
-                items.push(aliasData[i]);
-            }
-
-            response(200, {
-                count: items.length,
-                data: items.slice(start, end)
-            });
-        },
-        'GET alias/{id}': function(request, response) {
-            var id = request.data.id,
-                item = {};
-
-            for(var i in aliasData) {
-                var a = aliasData[i];
-
-                if(id == 'groups') {
-                    if(item[a.alias]) {
-                        continue;
-                    }
-
-                    item[a.alias] = {
-                        name: a.alias
-                    };
-                }
-                else {
-                    if(a.id == id) {
-                        item = a;
-                        break;
-                    }
-                }
-            }
-
-            if(item) {
-                if(id == 'groups') {
-                    var itemTmp = [];
-
-                    for(var i in item){
-                        itemTmp.push(item[i]);
-                    }
-
-                    item = itemTmp;
-                }
-
-                response(200, {
-                    success: true,
-                    data: item
-                });
-            } else {
-                response(404, {
-                    success: false,
-                    error: 'Unknown item'
-                });
-            }
-        }
-    });
 
     function Authorize() {
         var authkey = sessionStorage.getItem('authkey');
@@ -538,3 +108,413 @@ import fixture from 'can-fixture';
 
         document.cookie = updatedCookie;
     }
+
+function Aliases(request, response) {
+    var group = !!(request.data['groups']) || false,
+        start = request.data['offset'] || 0,
+        end = start + (request.data['limit'] || aliasData.length),
+        alias = request.data['alias'] || '',
+        recepient = request.data['recepient'] || null,
+        items = [],
+        groupCache = [];
+
+    if(recepient) {
+        recepient = new RegExp('^' + recepient);
+    }
+
+    for(var i in aliasData) {
+        if(!group && aliasData[i].alias != alias) {
+            continue;
+        }
+        if(recepient && !recepient.test(aliasData[i].recepient)) {
+            continue;
+        }
+
+        if(group) {
+            if(groupCache.indexOf(aliasData[i].alias) > -1) {
+                continue;
+            }
+
+            groupCache.push(aliasData[i].alias);
+        }
+
+        items.push(aliasData[i]);
+    }
+
+    response(200, {
+        count: items.length,
+        data: items.slice(start, end)
+    });
+};
+
+fixture({
+    'GET user/me': function(request, response) {
+        var auth = Authorize(),
+            data = null;
+
+        try {
+            if(auth == false) {
+                throw new AuthError();
+            }
+
+            for(var i in loginData) {
+                if(loginData[i]["jwt"] == auth.jwt) {
+                    data = loginData[i]
+                }
+            }
+
+            if(data == null) {
+                throw new AuthError()
+            }
+            response(200, {
+                success: true,
+                data: auth
+            });
+        } catch(err) {
+            response(err.code, {
+                error: err.message
+            });
+        }
+    },
+    'POST login': function(request, response) {
+        var data = request.data,
+            auth = getCookie('authsess'),
+            authSess;
+        
+        try {
+            if(!data['email']) {
+                throw new Error('Empty login value');
+            }
+        
+            if(!data['password']) {
+                throw new Error('Empty password value');
+            }
+
+            for(var i in loginData) {
+                if([loginData[i].login, loginData[i].domainname].join('@') == data['email'] && loginData[i].password == data['password']) {
+                    authSess = {
+                        jwt: loginData[i].jwt
+                    };
+                    break;
+                }
+            }
+            
+            if(!authSess) {
+                throw new Error('Unknown manager');
+            }
+
+            response(200, {
+                success: true,
+                data: authSess
+            });
+        }
+        catch (err) {
+            response(401, {
+                success: false,
+                error: {
+                    code: 401,
+                    message: err.message
+                }
+            });
+        }
+
+    },
+    'DELETE user/logout': function(request, response) {
+        sessionStorage.removeItem('authkey');
+        response(401);
+    },
+    'GET accesses': function(request, response) {
+        var auth = Authorize(),
+            start = request.data.offset || 0,
+            end = start + (request.data.limit || data.length);
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+            response(200, {
+                count: accessData.length,
+                data: accessData.slice(start, end)
+            });
+        }
+        catch(err) {
+            response(err.code, {
+                error: err.message,
+                success: false
+            });
+        }
+    },
+    'GET access/{id}': function(request, response) {
+        var id = request.data.id,
+            item, a;
+
+        for(var i in accessData) {
+            if(a = accessData[i], a.id == id) {
+                item = a;
+                break;
+            }
+        }
+
+        if(item) {
+            response(200, {
+                success: true,
+                data: item
+            });
+        } else {
+            response(404, {
+                success: false,
+                error: 'Unknown item'
+            });
+        }
+    },
+    'PUT access/{id}': function(request, response) {
+        var auth = Authorize(),
+            data = request.data,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['id']) {
+                throw new RespError('Unknown item');
+            }
+
+            if(data['access'] != 'REJECT' && data['access'] != 'OK') {
+                throw new RespError('Unknown access value');
+            }
+
+            if(!data['client']) {
+                throw new RespError('Empty client value');
+            }
+
+            for(var i in accessData) {
+                if(accessData[i].id == data.id) {
+                    accessData[i].client = data.client;
+                    accessData[i].access = data.access;
+
+                    done = true;
+                    break;
+                }
+            }
+
+            if(!done) {
+                throw new Error('Unknown item');
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });    
+    },
+    'POST access': function(request, response) {
+        var auth = Authorize(),
+            data = request.data,
+            maxId = 0;
+        
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['client']) {
+                throw new RespError('Empty client value');
+            }
+        
+            if(data['access'] != 'REJECT' && data['access'] != 'OK') {
+                throw new RespError('Unknown access value');
+            }
+
+            for(var i in accessData) {
+                maxId = accessData[i].id > maxId ? accessData[i].id : maxId;
+            }
+            
+            maxId++;
+
+            data['id'] = maxId;
+            accessData.push(data);
+
+            response(200, {
+                success: true,
+                data: data
+            });
+        }
+        catch (err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+        }
+    },
+    'DELETE access/{id}': function(request, response) {
+        var id = request.data.id,
+            auth = Authorize(),
+            data = request.data;
+        
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            for(var i in accessData) {
+                if(accessData[i].id == id) {
+                    accessData.splice(i, 1);
+                    break;
+                }
+            }
+
+            response(200, {
+                success: true,
+                data: data
+            });
+        }
+        catch (err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+        }
+    },
+    'GET spams': function(request, response) {
+        var start = request.data['offset'] || 0,
+            end = start + (request.data['limit'] || spamData.length);
+
+        response(200, {
+            count: spamData.length,
+            data: spamData.slice(start, end)
+        });
+    },
+    'GET transports': function(request, response) {
+        var start = request.data['offset'] || 0,
+            end = start + (request.data['limit'] || transportData.length);
+
+        response(200, {
+            count: transportData.length,
+            data: transportData.slice(start, end)
+        });
+    },
+    'GET transport/{id}': function(request, response) {
+        var id = request.data.id,
+            item, a;
+
+        for(var i in transportData) {
+            if(a = transportData[i], a.id == id) {
+                item = a;
+                break;
+            }
+        }
+
+        if(item) {
+            response(200, {
+                success: true,
+                data: item
+            });
+        } else {
+            response(404, {
+                success: false,
+                error: 'Unknown item'
+            });
+        }
+    },
+    'POST transport': function(request, response) {
+        var auth = Authorize(),
+            data = request.data,
+            maxId = 0;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['domain']) {
+                throw new RespError('Empty domain value');
+            }
+
+            for(var i in transportData) {
+                maxId = transportData[i].id > maxId ? transportData[i].id : maxId;
+            }
+            
+            maxId++;
+
+            transportData.push({
+                id: maxId,
+                domain: data['domain'] || '',
+                transport: data['transport'] || 'virtaul',
+                rootdir: data['rootdir'] || '/var/mail'
+            });
+
+            data['id'] = maxId;
+
+            response(200, {
+                success: true,
+                data: data
+            });    
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+    },
+    'PUT transport/{id}': function(request, response) {
+        var auth = Authorize(),
+            data = request.data,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['id']) {
+                throw new RespError('Unknown item');
+            }
+
+            for(var i in transportData) {
+                if(transportData[i].id == data.id) {
+                    transportData[i] = {
+                        id: data['id'],
+                        domain: data['domain'] || transportData[i].domain,
+                        transport: data['transport'] || transportData[i].transport,
+                        rootdir: data['rootdir'] || transportData[i].rootdir
+                    };
+                    done = true;
+                    break;
+                }
+            }
+
+            if(!done) {
+                throw new Error('Unknown item');
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });    
+    },
+    'GET aliases/groups': function(request, response) {
+        request.data['groups'] = 1;
+        Aliases(request, response);
+    },
+    'GET aliases': Aliases,
+    'GET alias/{id}': Aliases
+});

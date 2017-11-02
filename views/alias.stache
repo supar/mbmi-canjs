@@ -6,6 +6,7 @@
     </div>
 {{/if}}
 <can-import from="../components/grid" />
+<can-import from="../components/form/autocomplete" />
 <div class="panel-body">
     <div role="toolbar">
         <div class="input-group" role="group">
@@ -15,7 +16,9 @@
                 {{/isViewSmall}}
                 <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
             </span>
-            <input type="text" class="form-control">
+            <form-autocomplete value:to="search">
+                <input type="text" class="form-control">
+            </form-autocomplete>
         </div>
     </div>
 </div>
@@ -47,10 +50,10 @@
     </div>
     <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
         <ul class="list-group">
-            <panel-grid api:from="groups" listView:from="listView" pagination:from="pagination">
+            <panel-grid api:from="group" listView:from="listView" pagination:from="pagination" filter:from="groupFilter">
             <can-template name="grid-body-row">
             {{^isPending}}{{#this}}
-            <li class="list-group-item {{#isGroupActive}}active{{/isGroupActive}}" on:click="activeGroup">{{name}}</li>
+            <li class="list-group-item {{#isGroupActive}}active{{/isGroupActive}}" on:click="activeGroup">{{alias}}</li>
             {{/this}}{{/isPending}}
             </can-template>
             </panel-grid>
