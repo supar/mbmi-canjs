@@ -1,5 +1,8 @@
 <div class="panel panel-default">
-<div class="panel-heading">{{title}}</div>
+<div class="panel-heading">
+    {{title}}
+    {{#isViewSmall}}{{#isGroupContentReady}} :: {{groupSelected}}{{/isGroupContentReady}}{{/isViewSmall}}
+</div>
 {{#if error}}
     <div class="panel-body">
         <div class="alert alert-danger" role="alert">{{error}}</div>
@@ -12,9 +15,9 @@
         <div class="input-group" role="group">
             <span class="input-group-btn">
                 {{#isViewSmall}}
-                <button type="button" class="btn btn-primary" on:click="doToggle">Groups</button>
+                <button type="button" class="btn btn-primary {{#toggle}}active{{/toggle}}" on:click="doToggle">Groups</button>
                 {{/isViewSmall}}
-                <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
+                <button type="button" class="btn btn-primary disabled"><i class="glyphicon glyphicon-plus"></i></button>
             </span>
             <form-autocomplete value:to="search">
                 <input type="text" class="form-control">
@@ -23,10 +26,23 @@
     </div>
 </div>
 <div class="panel-body">
-<div class="row row-offcanvas row-offcanvas-right {{#toggle}}active{{/toggle}}">
-    <div class="col-xs-12 col-sm-9 col-sm-push-3">
+<div class="row row-offcanvas {{#toggle}}active{{/toggle}}">
+    <div class="sidebar-offcanvas" id="sidebar">
+    <div class="col-md-12">
+        <ul class="list-group">
+            <panel-grid api:from="group" listView:from="listView" pagination:from="pagination" filter:from="groupFilter">
+            <can-template name="grid-body-row">
+            {{^isPending}}{{#this}}
+            <li class="list-group-item {{#isGroupActive}}active{{/isGroupActive}}" on:click="activeGroup">{{alias}}</li>
+            {{/this}}{{/isPending}}
+            </can-template>
+            </panel-grid>
+        </ul>
+    </div>
+    </div>
+    <div class="main-offcanvas">
         <div class="container-fluid">
-        {{#if groupSelected}}
+        {{#isGroupContentReady}}
         <panel-grid api:from="api" filter:from="aliasFilter">
             <can-template name="grid-head">
                 <thead>
@@ -45,21 +61,15 @@
             {{/this}}{{/isPending}}
             </can-template>
         </panel-grid>
-        {{/if}}
+        {{/isGroupContentReady}}
         </div>
     </div>
-    <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
-        <ul class="list-group">
-            <panel-grid api:from="group" listView:from="listView" pagination:from="pagination" filter:from="groupFilter">
-            <can-template name="grid-body-row">
-            {{^isPending}}{{#this}}
-            <li class="list-group-item {{#isGroupActive}}active{{/isGroupActive}}" on:click="activeGroup">{{alias}}</li>
-            {{/this}}{{/isPending}}
-            </can-template>
-            </panel-grid>
-        </ul>
-    </div>
 </div>
+    {{^isGroupContentReady}}
+    <div class="row">
+        <div class="center-block text-center">No data found</div>
+    </div>
+    {{/isGroupContentReady}}
 </div>
 
 </div>

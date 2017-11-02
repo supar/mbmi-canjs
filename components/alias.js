@@ -58,6 +58,7 @@ let panelExt = panel.extend({
     aliasFilter: {
         Value: map
     },
+    groupCount: 'number',
     groupFilter: {
         Value: map.extend({
             recepient: 'string',
@@ -100,6 +101,10 @@ let panelExt = panel.extend({
 
     activeGroup: function(item) {
         this.groupSelected = item.get('alias');
+
+        if(this.get('toggle') === true) {
+            this.toggle = false;
+        }
     },
 
     doToggle: function() {
@@ -136,6 +141,7 @@ export default component.extend({
                 found = false,
                 group = model.get('groupSelected');
                 
+            model.groupCount = response.length;
 
             if(response.length > 0) {
                 if(group) {
@@ -167,23 +173,34 @@ export default component.extend({
     },
 
     helpers: {
-        isGrid: function() {
-            return (this.id() == null)
-        },
         isForm: function() {
             return (this.id() >= 0)
         },
-        isViewSmall: function(options) {
-            if(this.winsmall) {
-                return options.fn();
-            }
-
-            return options.inverse();
+        isGrid: function() {
+            return (this.id() == null)
         },
         isGroupActive: function(options) {
             var alias = options.context.get('alias');
 
             if(alias == this.groupSelected){
+                return options.fn();
+            }
+
+            return options.inverse();
+        },
+        isGroupContentReady: function(options) {
+            var model = this;
+
+            if(model.get('groupCount') < 1 ||
+                !model.get('groupSelected'))
+            {
+                return options.inverse();
+            }
+
+            return options.fn();
+        },
+        isViewSmall: function(options) {
+            if(this.winsmall) {
                 return options.fn();
             }
 

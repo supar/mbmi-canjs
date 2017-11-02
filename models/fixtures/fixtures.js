@@ -46,6 +46,7 @@ import fixture from 'can-fixture';
             {id: 6, alias: "f_group@domain.com", recepient: "any_2@extenal.com", comment: "Any text ext-text" },
             {id: 7, alias: "f_group@domain.com", recepient: "any_3@extenal.com", comment: "Any text ext-text" },
             {id: 8, alias: "f_group@domain.com", recepient: "any_4@extenal.com", comment: "Any text ext-text" },
+            {id: 8, alias: "d_long_group@data.domain.com", recepient: "fuzzy@intenet.com", comment: "Long text here and there" },
         ];
 
 
