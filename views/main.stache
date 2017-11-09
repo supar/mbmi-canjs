@@ -2,7 +2,7 @@
 <div class="main">
 {{#if isAuthorized}}
     <can-import from="components/menu" />
-    <navigation-panel vm:this:to="scope.vars.menu">
+    <navigation-panel @itemAccess:to="scope.vars.@*Access">
     <header class="header">
        <div class="container-fluid nav-row">
            <div>
