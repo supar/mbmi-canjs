@@ -50,12 +50,15 @@ import fixture from 'can-fixture';
         ];
 
 
-    function Authorize() {
-        var authkey = sessionStorage.getItem('authkey');
+    function Authorize(request) {
+        var authkey = sessionStorage.getItem('authkey'),
+            authHeader = request.headers['Authorization'] || '';
 
-        for(var i in loginData) {
-            if(loginData[i].jwt == authkey) {
-                return loginData[i];
+        if(String(authHeader).substr(7) === authkey) {
+            for(var i in loginData) {
+                if(loginData[i].jwt == authkey) {
+                    return loginData[i];
+                }
             }
         }
 
@@ -150,7 +153,7 @@ function Aliases(request, response) {
 
 fixture({
     'GET user/me': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             data = null;
 
         try {
@@ -225,7 +228,7 @@ fixture({
         response(401);
     },
     'GET accesses': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             start = request.data.offset || 0,
             end = start + (request.data.limit || data.length);
 
@@ -269,7 +272,7 @@ fixture({
         }
     },
     'PUT access/{id}': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             data = request.data,
             done = false;
 
@@ -318,7 +321,7 @@ fixture({
         });    
     },
     'POST access': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             data = request.data,
             maxId = 0;
         
@@ -358,7 +361,7 @@ fixture({
     },
     'DELETE access/{id}': function(request, response) {
         var id = request.data.id,
-            auth = Authorize(),
+            auth = Authorize(request),
             data = request.data;
         
         try {
@@ -427,7 +430,7 @@ fixture({
         }
     },
     'POST transport': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             data = request.data,
             maxId = 0;
 
@@ -469,7 +472,7 @@ fixture({
         }
     },
     'PUT transport/{id}': function(request, response) {
-        var auth = Authorize(),
+        var auth = Authorize(request),
             data = request.data,
             done = false;
 
