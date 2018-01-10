@@ -8,8 +8,8 @@
         <div class="alert alert-danger" role="alert">{{error}}</div>
     </div>
 {{/if}}
-<can-import from="../components/grid" />
-<can-import from="../components/form/autocomplete" />
+<can-import from="~/components/grid" />
+<can-import from="~/components/form/autocomplete" />
 <div class="panel-body">
     <div role="toolbar">
         <div class="input-group" role="group">
@@ -47,7 +47,7 @@
             <can-template name="grid-head">
                 <thead>
                     <tr>
-                        <th>Recepient</th>
+                        <th>Recipient</th>
                         <th>Comment</th>
                     </tr>
                 </thead>
@@ -55,7 +55,7 @@
             <can-template name="grid-body-row">
             {{^isPending}}{{#this}}
             <tr>
-                <td data-title="Recepient">{{recepient}}</td>
+                <td data-title="Recepient">{{recipient}}</td>
                 <td data-title="Comment">{{comment}}</td>
             </tr>
             {{/this}}{{/isPending}}

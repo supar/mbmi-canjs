@@ -6,6 +6,7 @@ import dataUrl from 'can-connect/data/url/url';
 import constructor from 'can-connect/constructor/constructor';
 import parse from 'can-connect/data/parse/parse';
 import baseMap from 'can-connect/can/map/map';
+import ajax from 'util/ajax-setup';
 
 import tpl from '../views/alias.stache!';
 import panel from '../models/panel';
@@ -23,7 +24,7 @@ Alias.List = list.extend({
 });
 
 connect(
-    [ constructor, dataUrl, parse, baseMap ],
+    [ constructor, dataUrl, parse, baseMap, ajax ],
     {
         Map: Alias,
         List: Alias.List,
@@ -43,7 +44,7 @@ Group.List = list.extend({
 });
 
 connect(
-    [ constructor, dataUrl, parse, baseMap ],
+    [ constructor, dataUrl, parse, baseMap, ajax ],
     {
         Map: Group,
         List: Group.List,
@@ -61,7 +62,7 @@ let panelExt = panel.extend({
     groupCount: 'number',
     groupFilter: {
         Value: map.extend({
-            recepient: 'string',
+            recipient: 'string',
             group: {
                 type: 'number',
                 value: 1
@@ -73,7 +74,7 @@ let panelExt = panel.extend({
         set: function(newVal) {
             this.aliasFilter.update({
                 alias: newVal,
-                recepient: this.groupFilter.get('recepient')
+                recipient: this.groupFilter.get('recipient')
             });
 
             return newVal
@@ -163,7 +164,7 @@ export default component.extend({
 
         '{viewModel} search': function(model, e, value) {
             model.groupFilter.assign({
-                recepient: value
+                recipient: value
             })
         },
 
