@@ -38,12 +38,12 @@ export default map.extend(
             var id = id || (typeof id == "number" ? 0 : null);
         
             if(parseInt(id) > -1) {
-                route.data.set({
+                route.data.assign({
                     itemId: id
-                }, false);
+                });
             } else {
-                this.set('error', '');
-                route.data.set({
+                this.assign({error: ''});
+                route.data.assign({
                     itemId: undefined
                 });
             }
