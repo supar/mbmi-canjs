@@ -1,11 +1,13 @@
 <div masked>
     {{^listView}}
+    <div class="table-wrap">
     <table class="table table-data table-responsive-condense">
         <can-slot name="grid-head" />
         <tbody>
             <can-slot name="grid-body-row" this:from="gridData" />
         </tbody>
     </table>
+    </div>
     {{else}}
         <can-slot name="grid-body-row" this:from="../gridData" />
     {{/listView}}
