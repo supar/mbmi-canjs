@@ -6,10 +6,10 @@
     "dependencies": {
         "bootstrap": "3.3.7",
         "can-component": "3.3.6",
-        "can-connect": "1.5.9",
-        "can-define": "1.5.3",
-        "can-route": "3.2.3",
-        "can-stache": "3.13.0",
+        "can-connect": "1.5.10",
+        "can-define": "1.5.4",
+        "can-route": "3.2.4",
+        "can-stache": "3.13.3",
         "jquery": "3.2.1",
         "steal": "^1.5.13"
     },
@@ -21,12 +21,6 @@
         "steal-stache": "^3.1.1"
     },
     "steal": {
-        "bundle": [
-            "components/authorize",
-            "components/alias",
-            "components/menu",
-            "components/transport"
-        ],
         "meta": {
             "models/fixtures": {
                 "bundle": false
