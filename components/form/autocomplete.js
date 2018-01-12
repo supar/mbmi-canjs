@@ -2,17 +2,20 @@ import component from 'can-component';
 
 export default component.extend({
     tag: 'form-autocomplete',
+    leakScope: false,
     viewModel: {
         id: 'string',
         defaultDelay: {
             type: 'number',
             value: 600
         },
+        focus: 'boolean',
         stop: 'boolean',
         value: 'string',
 
         // Cancel delayed action
         cancel: function() {
+            this.focus = false;
             this.stop = true;
             this.delay();
             this.stop = false;
@@ -39,6 +42,23 @@ export default component.extend({
                 me.stop = false;
             }, ms)
         },
+
+        data: {
+            get: function(last, setAttr) {
+                var model = this,
+                    store = model.get('api') || null,
+                    filter = model.get('value') || null,
+                    params = {};
+
+                if(filter && typeof filter == "object") {
+                    params = $.extend(params, filter.get());
+                }
+
+                return store.getList(params).then(function(response) {
+                    setAttr(response);
+                });
+            }
+        }
     },
     events: {
         '{element} input keyup': function(el, e) {
@@ -66,8 +86,21 @@ export default component.extend({
             }
         },
 
+        '{element} input focus': function(el, e) {
+            this.viewModel.assign({ focus: true });
+        },
+
         '{element} input blur': function(el, e) {
             this.viewModel.cancel();
+        }
+    },
+    helpers: {
+        isDropDown: function(options) {
+            if(this.get('api') && this.get('focus') === true) {
+                return options.fn(this.get('data'))
+            }
+
+            return options.inverse()
         }
     }
 });
