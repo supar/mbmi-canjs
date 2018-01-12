@@ -6,6 +6,10 @@ import constructor from 'can-connect/constructor/constructor';
 import parse from 'can-connect/data/parse/parse';
 import canMap from 'can-connect/can/map/map';
 import error from 'util/error';
+import ajax from 'util/ajax-setup';
+
+
+import $ from 'jquery';
 
 let login = map.extend({
     '*': {
@@ -23,7 +27,7 @@ let login = map.extend({
 });
 
 connect(
-    [ constructor, dataUrl, parse, canMap ],
+    [ constructor, dataUrl, parse, canMap, ajax ],
     {
         Map: login,
         // This is strange hook to prevent error
@@ -32,7 +36,7 @@ connect(
         parseInstanceProp: 'data',
         url: {
             createData: 'login',
-            destroyData: 'logout'
+            destroyData: 'logout',
         }
     });
 
