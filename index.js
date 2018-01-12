@@ -28,10 +28,12 @@ let AppModel = map.extend({
             sessionStorage.setItem('authkey', val);
     
             if(!val && this.get('session')) {
-                this.set({
+                this.assign({
                     session: undefined
                 });
             }
+
+            return val;
         }
     },
     ready: 'boolean',
@@ -63,16 +65,21 @@ let AppModel = map.extend({
     }
 });
 
-var Application = window.Application = new AppModel({
+var Application = 
+//!steal-remove-start
+window.Application = 
+//!steal-remove-end
+new AppModel({
     jwt: sessionStorage.getItem('authkey')
 });
+
 // Remove loader
 Application.bind('ready', function(ev, val) {
     $('#load-wrap').addClass('loaded');
 });
 
 // Set authorization key to each request
-$.ajax({
+$.ajaxSetup({
     beforeSend: function(xhr) {
         var key = this.get('jwt');
     
@@ -86,7 +93,7 @@ $.ajax({
 let routeWithAccess = function(str) {
     let options = Array.prototype.slice.call(arguments, -1)[0],
         access = options.scope.get('session.manager') || 0,
-        check = options.scope.get('scope.vars.menu.itemAccess') || function() { return false },
+        check = options.scope.get('vars@*Access') || function() { return false },
         id = route.data.get('page');
 
     if(str === id && check(id, access)) {
