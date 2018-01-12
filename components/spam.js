@@ -6,6 +6,7 @@ import dataUrl from 'can-connect/data/url/url';
 import constructor from 'can-connect/constructor/constructor';
 import parse from 'can-connect/data/parse/parse';
 import baseMap from 'can-connect/can/map/map';
+import ajax from 'util/ajax-setup';
 
 import tpl from '../views/spam.stache!';
 import panel from '../models/panel';
@@ -22,7 +23,7 @@ spam.List = list.extend({
 });
 
 connect(
-    [ constructor, dataUrl, parse, baseMap ],
+    [ constructor, dataUrl, parse, baseMap, ajax ],
     {
         Map: spam,
         List: spam.List,

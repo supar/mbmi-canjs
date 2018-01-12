@@ -6,6 +6,7 @@ import dataUrl from 'can-connect/data/url/url';
 import constructor from 'can-connect/constructor/constructor';
 import parse from 'can-connect/data/parse/parse';
 import baseMap from 'can-connect/can/map/map';
+import ajax from 'util/ajax-setup';
 
 import tpl from '../views/smtp-access.stache!';
 import panel from '../models/panel';
@@ -21,7 +22,7 @@ access.List = list.extend({
 });
 
 connect(
-    [ constructor, dataUrl, parse, baseMap ],
+    [ constructor, dataUrl, parse, baseMap, ajax ],
     {
         Map: access,
         List: access.List,
