@@ -250,7 +250,7 @@ ul {
 }
 
 .table-wrap {
-    min-height: 300px;
+    min-height: 100px;
 }
 
 .table-data {
@@ -375,7 +375,7 @@ table {
     max-height: 500px;
     float: left;
     height:100%;
-    position:relative;
+    position:fixed;
     overflow-y:auto;
     overflow-x:hidden;
 
@@ -388,7 +388,7 @@ table {
         }
     }
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: @screen-sm-min) {
         position: absolute;
         width: 60%; /* 6 columns */
         display: none;
@@ -397,10 +397,14 @@ table {
 
 .main-offcanvas {
     height:100%;
-    overflow:auto;
+    padding: 0 0 0 210px;
+
+    @media screen and (max-width: @screen-sm-min) {
+        padding: 0;
+    }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: @screen-sm-min) {
     .row-offcanvas {
         position: relative;
         -webkit-transition: all 0.25s ease-out;
