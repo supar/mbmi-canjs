@@ -30,7 +30,24 @@ connect(
         List: Alias.List,
         parseInstanceProp: 'data',
         url: {
-            getListData: 'aliases'
+            createData: 'alias',
+            destroyData: 'alias/{id}',
+            getData: 'alias/{id}',
+            getListData: 'aliases',
+            updateData: "alias/{id}",
+        }
+    });
+
+// Extend alias model to retrieve alias and mailboxes in the system
+// Remove parse and baseMap helpers. Use own instance function
+let Complete = connect(
+    [ constructor, dataUrl, ajax ],
+    {
+        instance: function(data) {
+            return data
+        },
+        url: {
+            getListData: 'aliases/search'
         }
     });
 
@@ -112,13 +129,27 @@ let panelExt = panel.extend({
         this.toggle = !this.toggle;
     },
 
+    // Wrap parent route
+    // Undo route change if form already shown
+    route: function(id) {
+        if(id >= 0 && this.id() >= 0) {
+            return
+        }
+
+        // Call parent method
+        panel.prototype.route.call(this, id)
+    },
+
     setWinWidth: function() {
         this.winwidth = $(window).width();
-        this.winsmall = !(this.winwidth > 767);
+        this.winsmall = !(this.winwidth >= 773);
 
         if(!this.winsmall && this.toggle) {
             this.doToggle();
         } 
+    },
+
+    setRecipient: function(v) {
     }
 });
 
@@ -128,6 +159,7 @@ export default component.extend({
     viewModel: function(attr, parentScope) {
         return new panelExt({
             api: Alias,
+            complete: Complete,
             group: Group
         });
     },
