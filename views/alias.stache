@@ -1,3 +1,7 @@
+<can-import from="~/components/grid" />
+<can-import from="~/components/form/autocomplete" />
+<can-import from="../components/form" />
+
 <div class="panel panel-default">
 <div class="panel-heading">
     {{title}}
@@ -8,8 +12,6 @@
         <div class="alert alert-danger" role="alert">{{error}}</div>
     </div>
 {{/if}}
-<can-import from="~/components/grid" />
-<can-import from="~/components/form/autocomplete" />
 <div class="panel-body">
     <div role="toolbar">
         <div class="input-group" role="group">
@@ -17,7 +19,7 @@
                 {{#isViewSmall}}
                 <button type="button" class="btn btn-primary {{#toggle}}active{{/toggle}}" on:click="doToggle">Groups</button>
                 {{/isViewSmall}}
-                <button type="button" class="btn btn-primary disabled"><i class="glyphicon glyphicon-plus"></i></button>
+                <button type="button" class="btn btn-primary {{#if isForm()}}disabled{{/if}}" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
             </span>
             <form-autocomplete value:to="search">
                 <input type="text" class="form-control">
@@ -42,7 +44,7 @@
     </div>
     <div class="main-offcanvas">
         <div class="container-fluid">
-        {{#isGroupContentReady}}
+        {{#if isGrid()}}{{#isGroupContentReady}}
         <panel-grid api:from="api" filter:from="aliasFilter">
             <can-template name="grid-head">
                 <thead>
@@ -54,14 +56,66 @@
             </can-template>
             <can-template name="grid-body-row">
             {{^isPending}}{{#this}}
-            <tr>
+            <tr on:click="route({{id}}, %scope)">
                 <td data-title="Recepient">{{recipient}}</td>
                 <td data-title="Comment">{{comment}}</td>
             </tr>
             {{/this}}{{/isPending}}
             </can-template>
         </panel-grid>
-        {{/isGroupContentReady}}
+        {{/isGroupContentReady}}{{/if}}
+        {{#if isForm()}}
+        <panel-form panel:from="this">
+            <can-template name="form-body">
+            <fieldset>
+            <input type="hidden" value:bind="id">
+            <div class="form-group">
+                <label for="inputAlias" class="col-sm-3 control-label">Alias</label>
+                <div class="col-sm-9 col-md-6">
+                    <input type="input" class="form-control" id="inputAlias" placeholder="Alias milbox name" value:bind="alias">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputRecipient" class="col-sm-3 control-label">Recipient</label>
+                <div class="col-sm-9 col-md-6">
+                    <form-autocomplete value:from="recipient" api:from="../complete" on:vm:value="setRecipient">
+                        <div class="btn-group btn-group-justified">
+                        <input type="input" class="form-control" id="inputRecipient"
+                            placeholder="Recipient mailbox name"
+                            value:bind="value"
+                            role="group"
+                            data-toggle="dropdown"
+                            >
+                        {{#isDropDown}}<ul class="dropdown-menu" role="menu">{{^if(./isPending)}}
+                            {{^if(this.length)}}
+                            <li class="disabled"><a href="javascript:void(0)">No data</a></li>
+                            {{else}}
+                            {{#this}}<li><a href="javascript:void(0)" role="menuitem" on:click="select(this)">{{.}}</a></li>{{/this}}
+                            {{/if}}
+                        {{/if}}</ul>{{/isDropDown}}
+                        </div>
+                    </form-autocomplete>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputComments" class="col-sm-3 control-label">Comments</label>
+                <div class="col-sm-9 col-md-6">
+                    <input type="input" class="form-control" id="inputComments" placeholder="Comments" value:bind="comment">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-xs-offset-4 col-sm-6">
+                    <button type="button"
+                        class="btn btn-primary {{#if isSaving}}disabled{{/if isSaving}}"
+                        on:click="save(../onSuccess, ../onError)"
+                        >Save</button>
+                    <button type="button" class="btn btn-default" on:click="route()">Cancel</button>
+                </div>
+            </div>
+            </fieldset>
+            </can-template>
+        </panel-form>
+        {{/if}}
         </div>
     </div>
 </div>
@@ -71,5 +125,4 @@
     </div>
     {{/isGroupContentReady}}
 </div>
-
 </div>
