@@ -13,7 +13,7 @@
        </div>
    </div>
 </div>
-<can-import from="../components/grid" />
+<can-import from="~/components/grid" />
 <panel-grid api:from="api" error:to="error">
     <can-template name="grid-head">
         <thead>
@@ -44,7 +44,7 @@
 <panel-form panel:from="this">
     <can-template name="form-body">
     <fieldset>
-    <input type="hidden" value:bind="id">
+    <input type="hidden" value:bind="./id">
     <div class="form-group">
         <label for="inputClient" class="col-sm-4 control-label">Domain name</label>
         <div class="col-sm-4">
