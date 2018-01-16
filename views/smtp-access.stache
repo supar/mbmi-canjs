@@ -13,7 +13,7 @@
         </div>
     </div>
 </div>
-<can-import from="../components/grid" />
+<can-import from="~/components/grid" />
 <panel-grid api:from="api" error:to="error">
     <can-template name="grid-head">
         <thead>
@@ -36,7 +36,7 @@
 </panel-grid>
 {{/if}}
 {{#if isForm()}}
-<can-import from="../components/form" />
+<can-import from="~/components/form" />
 <panel-form panel:from="this">
     <can-template name="form-body">
     <fieldset>

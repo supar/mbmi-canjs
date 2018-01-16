@@ -6,7 +6,7 @@
    </div>
 {{/if}}
 {{#if isGrid()}}
-<can-import from="../components/grid" />
+<can-import from="~/components/grid" />
 <panel-grid api:from="api" error:to="error">
     <can-template name="grid-head">
         <thead>
