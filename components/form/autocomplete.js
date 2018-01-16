@@ -47,8 +47,17 @@ export default component.extend({
             get: function(last, setAttr) {
                 var model = this,
                     store = model.get('api') || null,
-                    filter = model.get('value') || null,
-                    params = {};
+                    filter = model.get('filter') || null,
+                    focus = model.get('focus') || false,
+                    params = {
+                        query: model.get('value')
+                    };
+
+                // No action if input is not focused
+                // Don't remove null
+                if(!focus) {
+                    return;
+                }
 
                 if(filter && typeof filter == "object") {
                     params = $.extend(params, filter.get());
@@ -58,6 +67,10 @@ export default component.extend({
                     setAttr(response);
                 });
             }
+        },
+
+        select: function(item) {
+            this.assign({value: item})
         }
     },
     events: {
@@ -96,7 +109,7 @@ export default component.extend({
     },
     helpers: {
         isDropDown: function(options) {
-            if(this.get('api') && this.get('focus') === true) {
+            if(this.get('api')) {
                 return options.fn(this.get('data'))
             }
 

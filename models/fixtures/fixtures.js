@@ -38,15 +38,15 @@ import fixture from 'can-fixture';
         ],
         
         aliasData = [
-            {id: 1, alias: "a_group@domain.com", recepient: "some_1@domain.com", comment: "Any text 1" },
-            {id: 2, alias: "a_group@domain.com", recepient: "some_2@domain.com", comment: "Any text 2" },
-            {id: 3, alias: "b_group@domain.com", recepient: "some_1@domain.com", comment: "Any text 3" },
-            {id: 4, alias: "b_group@domain.com", recepient: "some_3@domain.com", comment: "Any text 4" },
-            {id: 5, alias: "f_group@domain.com", recepient: "any_1@extenal.com", comment: "Any text ext-text" },
-            {id: 6, alias: "f_group@domain.com", recepient: "any_2@extenal.com", comment: "Any text ext-text" },
-            {id: 7, alias: "f_group@domain.com", recepient: "any_3@extenal.com", comment: "Any text ext-text" },
-            {id: 8, alias: "f_group@domain.com", recepient: "any_4@extenal.com", comment: "Any text ext-text" },
-            {id: 8, alias: "d_long_group@data.domain.com", recepient: "fuzzy@intenet.com", comment: "Long text here and there" },
+            {id: 1, alias: "a_group@domain.com", recipient: "some_1@domain.com", comment: "Any text 1" },
+            {id: 2, alias: "a_group@domain.com", recipient: "some_2@domain.com", comment: "Any text 2" },
+            {id: 3, alias: "b_group@domain.com", recipient: "some_1@domain.com", comment: "Any text 3" },
+            {id: 4, alias: "b_group@domain.com", recipient: "some_3@domain.com", comment: "Any text 4" },
+            {id: 5, alias: "f_group@domain.com", recipient: "any_1@extenal.com", comment: "Any text ext-text" },
+            {id: 6, alias: "f_group@domain.com", recipient: "any_2@extenal.com", comment: "Any text ext-text" },
+            {id: 7, alias: "f_group@domain.com", recipient: "any_3@extenal.com", comment: "Any text ext-text" },
+            {id: 8, alias: "f_group@domain.com", recipient: "any_4@extenal.com", comment: "Any text ext-text" },
+            {id: 8, alias: "d_long_group@data.domain.com", recipient: "fuzzy@intenet.com", comment: "Long text here and there" },
         ];
 
 
@@ -118,37 +118,58 @@ function Aliases(request, response) {
         start = request.data['offset'] || 0,
         end = start + (request.data['limit'] || aliasData.length),
         alias = request.data['alias'] || '',
-        recepient = request.data['recepient'] || null,
+        recipient = request.data['recipient'] || null,
+        id = request.data['id'] || null,
         items = [],
         groupCache = [];
 
-    if(recepient) {
-        recepient = new RegExp('^' + recepient);
+    if(recipient) {
+        recipient = new RegExp('^' + recipient);
     }
 
     for(var i in aliasData) {
-        if(!group && aliasData[i].alias != alias) {
-            continue;
-        }
-        if(recepient && !recepient.test(aliasData[i].recepient)) {
-            continue;
-        }
-
-        if(group) {
-            if(groupCache.indexOf(aliasData[i].alias) > -1) {
+        if(id) {
+            if(id != aliasData[i].id) {
+                continue;
+            }
+        } else {
+            if(!group && aliasData[i].alias != alias) {
+                continue;
+            }
+            if(recipient && !recipient.test(aliasData[i].recipient)) {
                 continue;
             }
 
-            groupCache.push(aliasData[i].alias);
+            if(group) {
+                if(groupCache.indexOf(aliasData[i].alias) > -1) {
+                    continue;
+                }
+
+                groupCache.push(aliasData[i].alias);
+            }
         }
 
         items.push(aliasData[i]);
     }
 
-    response(200, {
-        count: items.length,
-        data: items.slice(start, end)
-    });
+    if(id) {
+        if(items.length == 1) {
+            response(200, {
+                success: true,
+                data: items[0]
+            });
+        } else {
+            response(404, {
+                success: false,
+                error: 'Unknown item'
+            });
+        }
+    } else {
+        response(200, {
+            count: items.length,
+            data: items.slice(start, end)
+        });
+    }
 };
 
 fixture({
@@ -520,5 +541,142 @@ fixture({
         Aliases(request, response);
     },
     'GET aliases': Aliases,
-    'GET alias/{id}': Aliases
+    'GET alias/{id}': Aliases,
+    'POST alias': function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            maxId = 0;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['domain']) {
+                throw new RespError('Empty domain value');
+            }
+
+            for(var i in aliasData) {
+                maxId = aliasData[i].id > maxId ? aliasData[i].id : maxId;
+            }
+            
+            maxId++;
+
+            aliasData.push({
+                id: maxId,
+                alias: data['alias'] || '',
+                recipient: data['recipient'] || '',
+                comment: data['comment'] || ''
+            });
+
+            data['id'] = maxId;
+
+            response(200, {
+                success: true,
+                data: data
+            });    
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+    },
+    'PUT alias/{id}': function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['id']) {
+                throw new RespError('Unknown item');
+            }
+
+            for(var i in aliasData) {
+                if(aliasData[i].id == data.id) {
+                    aliasData[i] = {
+                        id: data['id'],
+                        alias: data['alias'] || aliasData[i].alias,
+                        recipient: data['recipient'] || aliasData[i].recipient,
+                        comment: data['comment'] || aliasData[i].comment
+                    };
+                    done = true;
+                    break;
+                }
+            }
+
+            if(!done) {
+                throw new Error('Unknown item');
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });    
+    },
+    'GET aliases/search': function(request, response) {
+        var auth = Authorize(request),
+            mail = request.data['query'] || '',
+            items = [];
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(mail) {
+                mail = new RegExp('^' + mail);
+            }
+
+            for(var i in aliasData) {
+                var m = aliasData[i].alias;
+
+                if(mail && !mail.test(m)) {
+                    continue
+                }
+
+                if(items.indexOf(m) < 0) {
+                    items.push(m)
+                }
+            }
+
+            for(var i in loginData) {
+                var m = loginData[i].login + '@' + loginData[i].domainname;
+
+                if(mail && !mail.test(m)) {
+                    continue
+                }
+
+                if(items.indexOf(m) < 0) {
+                    items.push(m)
+                }
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+        
+        response(200, {
+            success: true,
+            data: items
+        });    
+    },
 });
