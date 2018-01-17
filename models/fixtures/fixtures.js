@@ -552,8 +552,10 @@ fixture({
                 throw new AuthError();
             }
 
-            if(!data['domain']) {
-                throw new RespError('Empty domain value');
+            for(var key in data) {
+                if((key == 'alias' || key == 'recipient') && !data[key]) {
+                    throw new RespError('Empty ' + key + ' value');
+                }
             }
 
             for(var i in aliasData) {
