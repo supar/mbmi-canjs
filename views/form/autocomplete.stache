@@ -1,0 +1,8 @@
+<can-slot name="input" this:from="value" />
+{{#isDropDown}}<ul class="dropdown-menu" role="menu">{{^if(./isPending)}}
+    {{^if(this.length)}}
+    <li class="disabled"><a href="javascript:void(0)">No data</a></li>
+    {{else}}
+    {{#this}}<li><a href="javascript:void(0)" role="menuitem" on:click="select(this)">{{.}}</a></li>{{/this}}
+    {{/if}}
+{{/if}}</ul>{{/isDropDown}}
