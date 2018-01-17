@@ -72,29 +72,34 @@
             <div class="form-group">
                 <label for="inputAlias" class="col-sm-3 control-label">Alias</label>
                 <div class="col-sm-9 col-md-6">
-                    <input type="input" class="form-control" id="inputAlias" placeholder="Alias milbox name" value:bind="alias">
+                    <div class="btn-group btn-group-justified">
+                    <form-autocomplete value:from="alias" api:from="../complete" on:vm:value="setValue('alias', this, scope.arguments)">
+                        <can-template name="input">
+                        <input type="input" class="form-control" id="inputAlias"
+                            placeholder="Alias milbox name"
+                            value:bind="this"
+                            role="group"
+                            data-toggle="dropdown"
+                            >
+                    </form-autocomplete>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputRecipient" class="col-sm-3 control-label">Recipient</label>
                 <div class="col-sm-9 col-md-6">
+                    <div class="btn-group btn-group-justified">
                     <form-autocomplete value:from="recipient" api:from="../complete" on:vm:value="setValue('recipient', this, scope.arguments)">
-                        <div class="btn-group btn-group-justified">
+                        <can-template name="input">
                         <input type="input" class="form-control" id="inputRecipient"
                             placeholder="Recipient mailbox name"
-                            value:bind="value"
+                            value:bind="this"
                             role="group"
                             data-toggle="dropdown"
                             >
-                        {{#isDropDown}}<ul class="dropdown-menu" role="menu">{{^if(./isPending)}}
-                            {{^if(this.length)}}
-                            <li class="disabled"><a href="javascript:void(0)">No data</a></li>
-                            {{else}}
-                            {{#this}}<li><a href="javascript:void(0)" role="menuitem" on:click="select(this)">{{.}}</a></li>{{/this}}
-                            {{/if}}
-                        {{/if}}</ul>{{/isDropDown}}
-                        </div>
+                        </can-template>
                     </form-autocomplete>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
