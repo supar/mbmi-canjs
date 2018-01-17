@@ -28,5 +28,14 @@ let model = map.extend({
 export default component.extend({
     tag: 'panel-form',
     view: tpl,
-    ViewModel: model
+    ViewModel: model,
+    events: {
+        '{viewModel} modify': function(caller, e, data) {
+            var model = this.viewModel;
+
+            if(typeof data == 'object' && model.formData) {
+                model.formData.assign(data)
+            }
+        }
+    }
 });
