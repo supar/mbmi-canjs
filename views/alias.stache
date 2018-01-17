@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-primary {{#if isForm()}}disabled{{/if}}" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
             </span>
             <form-autocomplete value:to="search">
-                <input type="text" class="form-control">
+                <can-template name="input"><input type="text" class="form-control"></can-template>
             </form-autocomplete>
         </div>
     </div>
