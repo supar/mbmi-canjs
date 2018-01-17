@@ -46,6 +46,12 @@ export default construct.extend({
             errorMsg = data['error'] || {},
             names = ['code', 'message'];
 
+        if(typeof errorMsg === 'string') {
+            me.message = errorMsg
+
+            return
+        }
+
         for(var i = 0; i < names.length; i++) {
             var name = names[i];
 
