@@ -78,7 +78,7 @@
             <div class="form-group">
                 <label for="inputRecipient" class="col-sm-3 control-label">Recipient</label>
                 <div class="col-sm-9 col-md-6">
-                    <form-autocomplete value:from="recipient" api:from="../complete" on:vm:value="setRecipient">
+                    <form-autocomplete value:from="recipient" api:from="../complete" on:vm:value="setValue('recipient', this, scope.arguments)">
                         <div class="btn-group btn-group-justified">
                         <input type="input" class="form-control" id="inputRecipient"
                             placeholder="Recipient mailbox name"

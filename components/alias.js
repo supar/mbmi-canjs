@@ -149,7 +149,15 @@ let panelExt = panel.extend({
         } 
     },
 
-    setRecipient: function(v) {
+    // @param prop   Property name to change
+    // @param scope  Form model scope
+    // @param args   Event arguments
+    setValue: function(prop, scope, args) {
+        var data = {};
+
+        // Get new value from the second key
+        data[prop] = args[1];
+        scope.assign(data);
     }
 });
 
