@@ -76,6 +76,7 @@ let panelExt = panel.extend({
     aliasFilter: {
         Value: map
     },
+    form: 'observable',
     groupCount: 'number',
     groupFilter: {
         Value: map.extend({
@@ -123,6 +124,8 @@ let panelExt = panel.extend({
         if(this.get('toggle') === true) {
             this.toggle = false;
         }
+
+        this.modifyFormAlias()
     },
 
     doToggle: function() {
@@ -158,6 +161,12 @@ let panelExt = panel.extend({
         // Get new value from the second key
         data[prop] = args[1];
         scope.assign(data);
+    },
+
+    modifyFormAlias: function() {
+        if(this.id() >= 0 && this.form) {
+            this.form.dispatch('modify', [{ alias: this.groupSelected }])
+        }
     }
 });
 

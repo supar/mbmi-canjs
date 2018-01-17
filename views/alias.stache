@@ -65,7 +65,7 @@
         </panel-grid>
         {{/isGroupContentReady}}{{/if}}
         {{#if isForm()}}
-        <panel-form panel:from="this">
+        <panel-form panel:from="this" this:to="form">
             <can-template name="form-body">
             <fieldset>
             <input type="hidden" value:bind="id">
