@@ -1,5 +1,5 @@
 import component from 'can-component';
-import stache from '../../views/form/autocomplete.stache'
+import stache from '~/views/form/autocomplete.stache'
 
 export default component.extend({
     tag: 'form-autocomplete',
