@@ -39,16 +39,16 @@
     <section class="main-content">
         <div class="container-fluid card-layout">
         {{#routing 'alias'}}
-            <can-import from="components/alias">{{#isResolved}}<alias-panel />{{/isResolved}}</can-import>
+            <can-import from="~/components/alias">{{#isResolved}}<alias-panel />{{/isResolved}}</can-import>
         {{/routing}}
         {{#routing 'access'}}
-            <can-import from="components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
+            <can-import from="~/components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
         {{/routing}}
         {{#routing 'spam'}}
-            <can-import from="components/spam">{{#isResolved}}<spam-panel />{{/isResolved}}</can-import>
+            <can-import from="~/components/spam">{{#isResolved}}<spam-panel />{{/isResolved}}</can-import>
         {{/routing}}
         {{#routing 'transport'}}
-            <can-import from="components/transport">{{#isResolved}}<transport-panel />{{/isResolved}}</can-import>
+            <can-import from="~/components/transport">{{#isResolved}}<transport-panel />{{/isResolved}}</can-import>
         {{/routing}}
         </div>
     </section>
