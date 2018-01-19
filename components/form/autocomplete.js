@@ -1,4 +1,5 @@
 import component from 'can-component';
+import assign from 'can-assign';
 import stache from '~/views/form/autocomplete.stache'
 
 export default component.extend({
@@ -11,9 +12,24 @@ export default component.extend({
             type: 'number',
             value: 600
         },
-        focus: 'boolean',
+        dropdown: '*',
+        toggle: '*',
+        focus: {
+            type: 'boolean',
+            value: false
+        },
+        open: {
+            type: 'boolean',
+            value: false
+        },
+
         stop: 'boolean',
         value: 'string',
+
+        maxListHeight: {
+            type: 'string',
+            value: 'auto'
+        },
 
         // Cancel delayed action
         cancel: function() {
@@ -73,9 +89,38 @@ export default component.extend({
 
         select: function(item) {
             this.assign({value: item})
+        },
+
+        updateListHeight: function() {
+            var win = $(window),
+                offset = this.toggle.offset();
+
+            assign(offset, {
+                height: this.toggle.height()
+            });
+
+            this.assign({
+                maxListHeight: (win.height() - (offset.top + offset.height)) - 20 + 'px'
+            })
         }
     },
     events: {
+        'inserted': function() {
+            var me = this,
+                model = me.viewModel;
+
+            model.assign({
+                dropdown: $(me.element.querySelector('.dropdown-menu')),
+                toggle: $(me.element.querySelector('[data-toggle=dropdown]'))
+            });
+
+            $(me.element).find('.dropdown').on('show.bs.dropdown', function() {
+                model.assign({open: true})
+            })
+            $(me.element).find('.dropdown').on('hidden.bs.dropdown', function() {
+                model.assign({open: false})
+            })
+        },
         '{element} input keyup': function(el, e) {
             var value = el.value;
 
@@ -107,10 +152,17 @@ export default component.extend({
 
         '{element} input blur': function(el, e) {
             this.viewModel.cancel();
+        },
+
+        '{viewModel} open': function() {
+            this.viewModel.updateListHeight()
+        },
+        '{window} resize': function() {
+            this.viewModel.updateListHeight()
         }
     },
     helpers: {
-        isDropDown: function(options) {
+        dropDown: function(options) {
             if(this.get('api')) {
                 return options.fn(this.get('data'))
             }

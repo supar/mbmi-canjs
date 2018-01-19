@@ -37,10 +37,22 @@ a, {
 .main-content {
     margin-left: 210px;
     padding-top: 80px;
+    height: inherit;
 
     @media (max-width: 768px) {
         margin: 20px 0 0 0;
         padding: 0;
+    }
+}
+
+.card-layout {
+    height: 100%;
+    padding-bottom: 15px;
+
+    .panel {
+        height: 100%;
+        margin: 0px;
+        overflow:hidden;
     }
 }
 
@@ -420,4 +432,13 @@ table {
             }
         }
      }
+}
+
+.dropdown-menu {
+    &.dropdown-menu-overflow {
+        position:fixed;
+        top: auto;
+        left:auto;
+        overflow:auto;
+    }
 }
