@@ -29,32 +29,31 @@ connect(
         List: spam.List,
         parseInstanceProp: 'data',
         url: {
-            createData: 'spam',
-            destroyData: 'spam/{id}',
-            getData: 'spam/{id}',
-            getListData: 'spams',
-            updateData: "spam/{id}",
+            getListData: 'spam',
         }
     });
+
+let panelExt = panel.extend({
+    filter: {
+        type: 'observable',
+        Value: map.extend({
+            sort: { type: 'string', value: 'index' }
+        })
+    }
+});
 
 export default component.extend({
     tag: 'spam-panel',
     view: tpl,
     viewModel: function(attr, parentScope) {
-        return new panel({
+        return new panelExt({
             api: spam,
             title: "Mail spams"
         });
     },
     helpers: {
-        indexRound: function(opts) {
-            var opts = opts || {},
-                context = opts['context'] || null,
-                index = 0.0;
-
-            if(context) {
-                index = context.get('index') || 0.0;
-            }
+        indexRound: function(options) {
+            var index = options.scope.get('index') || 0.0;
 
             return index.toFixed(4);
         },

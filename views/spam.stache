@@ -7,7 +7,7 @@
 {{/if}}
 {{#if isGrid()}}
 <can-import from="~/components/grid" />
-<panel-grid api:from="api" error:to="error">
+<panel-grid api:from="api" filter:from="filter" error:to="error">
     <can-template name="grid-head">
         <thead>
             <tr>
@@ -21,7 +21,7 @@
     <can-template name="grid-body-row">
     {{^isPending}}
     {{#this}}
-    <tr row-index="{{%index}}">
+    <tr row-index="{{scope.index}}">
         <td data-title="Host">{{from}}</td>
         <td data-title="IP">{{ip}}</td>
         <td data-title="Attempts">{{attempt}}</td>
