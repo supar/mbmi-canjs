@@ -50,9 +50,7 @@ a, {
     padding-bottom: 15px;
 
     .panel {
-        height: 100%;
         margin: 0px;
-        overflow:hidden;
     }
 }
 
@@ -108,6 +106,7 @@ a, {
 
 .nav-row {
     display: table;
+    table-layout: fixed;
     width: 100%;
 
     > div {
@@ -120,9 +119,11 @@ a, {
         width: 100%;
     }
 
-    > div:first-child,
+    > div:first-child {
+        width: 60px;
+    }
     > div:last-child {
-        width: 70px;
+        width: 74px;
     }
 }
 
@@ -386,8 +387,6 @@ table {
     max-width: 220px;
     max-height: 500px;
     float: left;
-    height:100%;
-    position:fixed;
     overflow-y:auto;
     overflow-x:hidden;
 
@@ -436,9 +435,6 @@ table {
 
 .dropdown-menu {
     &.dropdown-menu-overflow {
-        position:fixed;
-        top: auto;
-        left:auto;
         overflow:auto;
     }
 }

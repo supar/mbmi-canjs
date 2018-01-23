@@ -1,6 +1,6 @@
-<div masked>
+<div class="panel" masked>
     {{^listView}}
-    <div class="table-wrap">
+    <div class="panel-body table-wrap">
     <table class="table table-data table-responsive-condense">
         <can-slot name="grid-head" />
         <tbody>
