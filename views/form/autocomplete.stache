@@ -2,7 +2,11 @@
 <div class="dropdown">
 <can-slot name="input" this:from="value" />
 {{#dropDown}}
-    <ul class="dropdown-menu dropdown-menu-overflow" role="menu" style="max-height:{{../maxListHeight}}">{{^if(./isPending)}}{{^if(this.length)}}
+    <ul class="dropdown-menu dropdown-menu-overflow" role="menu"
+        {{#dropDownBox}}style="
+            max-height:{{./maxHeight}}{{^eq maxHeight "auto"}}px{{/eq}};
+        "{{/dropDownBox}}
+        >{{^if(this.isPending)}}{{^if(this.length)}}
     <li class="disabled"><a href="javascript:void(0)">No data</a></li>
     {{else}}
     {{#this}}<li><a href="javascript:void(0)" role="menuitem" on:click="select(this)">{{.}}</a></li>{{/this}}

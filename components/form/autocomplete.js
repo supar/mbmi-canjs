@@ -1,4 +1,5 @@
 import component from 'can-component';
+import map from 'can-define/map/map';
 import assign from 'can-assign';
 import stache from '~/views/form/autocomplete.stache'
 
@@ -26,6 +27,14 @@ export default component.extend({
         stop: 'boolean',
         value: 'string',
 
+        listBox: {
+            type: 'observable',
+            Value: map.extend({
+                left: { type: 'number', value: 0 },
+                top: { type: 'number', value: 0 },
+                maxHeight: { type: 'string', value: 'auto' }
+            })
+        },
         maxListHeight: {
             type: 'string',
             value: 'auto'
@@ -91,17 +100,30 @@ export default component.extend({
             this.assign({value: item})
         },
 
-        updateListHeight: function() {
-            var win = $(window),
-                offset = this.toggle.offset();
+        updateListBox: function() {
+            var winHeight = window.innerHeight,
+                box = { left: 0, top: 0, maxHeight: 'auto' },
+                toggle = this.toggle,
+                list = this.dropdown,
+                toggleBox, dropdownBox;
 
-            assign(offset, {
-                height: this.toggle.height()
-            });
+            if(toggle) {
+                toggleBox = toggle.getBoundingClientRect();
 
-            this.assign({
-                maxListHeight: (win.height() - (offset.top + offset.height)) - 20 + 'px'
-            })
+                box.top = toggleBox.top + toggleBox.height;
+                box.left = toggleBox.left;
+
+                if(this.open) {
+                    dropdownBox = list.getBoundingClientRect();
+                    box.maxHeight = winHeight - box.top - 25;
+                }
+
+                if(box.maxHeight <= 0) {
+                    box.maxHeight = 'auto';
+                }
+            }
+
+            this.listBox.update(box);
         }
     },
     events: {
@@ -110,8 +132,8 @@ export default component.extend({
                 model = me.viewModel;
 
             model.assign({
-                dropdown: $(me.element.querySelector('.dropdown-menu')),
-                toggle: $(me.element.querySelector('[data-toggle=dropdown]'))
+                dropdown: me.element.querySelector('.dropdown-menu'),
+                toggle: me.element.querySelector('[data-toggle=dropdown]')
             });
 
             $(me.element).find('.dropdown').on('show.bs.dropdown', function() {
@@ -120,6 +142,8 @@ export default component.extend({
             $(me.element).find('.dropdown').on('hidden.bs.dropdown', function() {
                 model.assign({open: false})
             })
+
+            model.updateListBox();
         },
         '{element} input keyup': function(el, e) {
             var value = el.value;
@@ -155,10 +179,13 @@ export default component.extend({
         },
 
         '{viewModel} open': function() {
-            this.viewModel.updateListHeight()
+            this.viewModel.updateListBox();
         },
         '{window} resize': function() {
-            this.viewModel.updateListHeight()
+            this.viewModel.updateListBox();
+        },
+        '{window} scroll': function() {
+            this.viewModel.updateListBox();
         }
     },
     helpers: {
@@ -168,6 +195,10 @@ export default component.extend({
             }
 
             return options.inverse()
+        },
+
+        dropDownBox: function(options) {
+            return options.fn(this.get('listBox'))
         }
     }
 });
