@@ -409,7 +409,7 @@ fixture({
             });
         }
     },
-    'GET spams': function(request, response) {
+    'GET spam': function(request, response) {
         var start = request.data['offset'] || 0,
             end = start + (request.data['limit'] || spamData.length);
 
