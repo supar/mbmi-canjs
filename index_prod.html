@@ -2,7 +2,105 @@
 <html lang="en">
 	<head>
 		<title>mail-admin</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no">
+        <style>
+            @-webkit-keyframes spin {
+              0% {
+                -webkit-transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+              }
+            }
+            @keyframes spin {
+              0% {
+                transform: rotate(0deg);
+              }
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+            #load-wrap {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 10000;
+            }
+            #load-wrap .loader-section {
+              position: fixed;
+              top: 0;
+              width: 51%;
+              height: 100%;
+              background: #fff;
+              z-index: 10000;
+              -webkit-transform: translateX(0);
+              /* Chrome, Opera 15+, Safari 3.1+ */
+              -ms-transform: translateX(0);
+              /* IE 9 */
+              transform: translateX(0);
+              /* Firefox 16+, IE 10+, Opera */
+            }
+            #load-wrap .loader-section.section-left {
+              left: 0;
+            }
+            #load-wrap .loader-section.section-right {
+              right: 0;
+            }
+            #load-wrap .loader {
+              position: absolute;
+              left: 53%;
+              top: 50%;
+              margin: -75px 0 0 -75px;
+              border: 16px solid #f3f3f3;
+              border-radius: 50%;
+              border-top: 16px solid #3498db;
+              width: 120px;
+              height: 120px;
+              box-sizing: border-box;
+              -webkit-animation: spin 2s linear infinite;
+              animation: spin 2s linear infinite;
+              z-index: 10001;
+            }
+            #load-wrap.loaded {
+              visibility: hidden;
+              -webkit-transform: translateY(-100%);
+              /* Chrome, Opera 15+, Safari 3.1+ */
+              -ms-transform: translateY(-100%);
+              /* IE 9 */
+              transform: translateY(-100%);
+              /* Firefox 16+, IE 10+, Opera */
+              -webkit-transition: all 0.3s 1s ease-out;
+              transition: all 0.3s 1s ease-out;
+            }
+            #load-wrap.loaded .loader {
+              opacity: 0;
+              -webkit-transition: all 0.3s ease-out;
+              transition: all 0.3s ease-out;
+            }
+            #load-wrap.loaded .loader-section.section-left {
+              -webkit-transform: translateX(-100%);
+              /* Chrome, Opera 15+, Safari 3.1+ */
+              -ms-transform: translateX(-100%);
+              /* IE 9 */
+              transform: translateX(-100%);
+              /* Firefox 16+, IE 10+, Opera */
+            }
+            #load-wrap.loaded .loader-section.section-right {
+              -webkit-transform: translateX(100%);
+              /* Chrome, Opera 15+, Safari 3.1+ */
+              -ms-transform: translateX(100%);
+              /* IE 9 */
+              transform: translateX(100%);
+              /* Firefox 16+, IE 10+, Opera */
+            }
+            #load-wrap.loaded .loader-section.section-left,
+            #load-wrap.loaded .loader-section.section-right {
+              -webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+              transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            }
+        </style>
 	</head>
 	<body>
         <div id="load-wrap">
