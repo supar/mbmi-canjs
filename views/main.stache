@@ -36,6 +36,9 @@
     </navigation-panel>
     <section class="main-content">
         <div class="container-fluid card-layout">
+        {{#routing 'user'}}
+            <can-import from="~/components/user">{{#isResolved}}<user-panel />{{/isResolved}}</can-import>
+        {{/routing}}
         {{#routing 'alias'}}
             <can-import from="~/components/alias">{{#isResolved}}<alias-panel />{{/isResolved}}</can-import>
         {{/routing}}
