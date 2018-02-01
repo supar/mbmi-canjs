@@ -1,0 +1,60 @@
+<can-import from="~/components/grid" />
+<can-import from="~/components/form/autocomplete" />
+<can-import from="~/components/form" />
+
+<div class="panel panel-default">
+<div class="panel-heading">
+    {{title}}
+</div>
+{{#if error}}
+    <div class="panel-body">
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+    </div>
+{{/if}}
+<div class="panel-body">
+    <div role="toolbar">
+        <div class="input-group" role="group">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary {{#if isForm()}}disabled{{/if}}" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
+            </span>
+            <form-autocomplete value:to="search">
+                <can-template name="input"><input type="text" class="form-control"></can-template>
+            </form-autocomplete>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+{{#if isGrid()}}
+    <panel-grid api:from="api" error:to="error">
+        <can-template name="grid-head">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Login</th>
+                    <th>SMTP</th>
+                    <th>POP3</th>
+                    <th>IMAP</th>
+                    <th>Sieve</th>
+                </tr>
+            </thead>
+        </can-template>
+        <can-template name="grid-body-row">
+        {{^isPending}}
+        {{#this}}
+        <tr on:click="route({{id}}, %scope)">
+            <td data-title="ID">{{id}}</td>
+            <td data-title="Name">{{name}}</td>
+            <td data-title="Login">{{fullLogin}}</td>
+            <td data-title="SMTP">{{smtp}}</td>
+            <td data-title="POP3">{{pop3}}</td>
+            <td data-title="IMAP">{{imap}}</td>
+            <td data-title="Sieave">{{sieve}}</td>
+        </tr>
+        {{/this}}
+        {{/isPending}}
+        </can-template>
+    </panel-grid>
+{{/if}}
+</div>
+</div>

@@ -1,9 +1,9 @@
 import fixture from 'can-fixture';
 
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1", manager: 0 },
-            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2", manager: 0 },
-            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3", manager: 1 },
+            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
+            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
+            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3", smtp: 1, pop3: 0, imap: 1, sieve: 1, manager: 1 },
         ],
 
         accessData = [
@@ -177,6 +177,26 @@ function Aliases(request, response) {
 };
 
 fixture({
+    'GET users': function(request, response) {
+        var auth = Authorize(request),
+            start = request.data['offset'] || 0,
+            end = start + (request.data['limit'] || loginData.length);
+
+        try {
+            if(auth == false) {
+                throw new AuthError();
+            }
+
+            response(200, {
+                count: loginData.length,
+                data: loginData.slice(start, end)
+            });
+        } catch(err) {
+            response(err.code, {
+                error: err.message
+            });
+        }
+    },
     'GET user/me': function(request, response) {
         var auth = Authorize(request),
             data = null;
