@@ -1,0 +1,9 @@
+<div class="panel panel-danger {{class}}">
+    <div class="panel-heading">Remove item</div>
+    <div class="panel-body">
+        <p>Removed item cannot be restored!</p>
+        <button type="button"
+            class="btn btn-danger"
+            >Remove</button>
+    </div>
+</div>
