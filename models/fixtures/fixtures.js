@@ -654,6 +654,36 @@ fixture({
             data: data
         });    
     },
+    'DELETE alias/{id}': function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            id = data.id,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            for(var i in aliasData) {
+                if(aliasData[i].id == id) {
+                    aliasData.splice(i, 1);
+                    break;
+                }
+            }
+
+            response(200, {
+                success: true,
+                data: data
+            });
+        }
+        catch (err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+        }
+    },
     'GET aliases/search': function(request, response) {
         var auth = Authorize(request),
             mail = request.data['query'] || '',
