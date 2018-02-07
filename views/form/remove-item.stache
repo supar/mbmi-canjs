@@ -4,6 +4,19 @@
         <p>Removed item cannot be restored!</p>
         <button type="button"
             class="btn btn-danger"
-            >Remove</button>
+            remove-item>Remove</button>
+        {{#Confirm}}
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body">Remove anyway?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" confirm-dissmis>No</button>
+                        <button type="button" class="btn btn-danger" confirm-remove>Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/Confirm}}
     </div>
 </div>
