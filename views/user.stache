@@ -56,5 +56,78 @@
         </can-template>
     </panel-grid>
 {{/if}}
+{{#if isForm()}}
+    <panel-form panel:from="this">
+        <can-template name="form-body">
+        <fieldset>
+        <input type="hidden" value:bind="./id">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">&nbsp;</label>
+            <div class="col-sm-10">
+            <div class="checkbox">
+                <label class="checkbox-inline">
+                    <input type="checkbox" value:bind="manager"> Manager
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value=""> SMTP
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value=""> IMAP
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value=""> POP3
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value=""> Siev
+                </label>
+            </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="input" class="form-control" placeholder="Name" value:bind="name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Login</label>
+            <div class="col-sm-5">
+                <div class="input-group email-login">
+                    <input type="input" class="form-control" placeholder="Login" value:bind="login">
+                    <span class="input-group-addon">@</span>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <select class="form-control"><option>lanbilling.ru</option></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <input type="input" class="form-control" placeholder="Password" value:bind="pass">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-random"></span></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button"
+                    class="btn btn-primary {{#if isSaving}}disabled{{/if isSaving}}"
+                    on:click="save(../onSuccess, ../onError)"
+                    >Save</button>
+                <button type="button" class="btn btn-default" on:click="route()">Cancel</button>
+            </div>
+        </div>
+        </fieldset>
+        {{^if isNew()}}<form-remove-item
+            on:destroy="destroy(../onSuccess, ../onError)"
+            class:from="'panel-indent'"
+            data-toggle:from="'modal'" />{{/if}}
+        </can-template>
+    </panel-form>
+{{/if}}
 </div>
 </div>
