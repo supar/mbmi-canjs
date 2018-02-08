@@ -1,5 +1,6 @@
 <can-import from="~/components/grid" />
 <can-import from="~/components/form/autocomplete" />
+<can-import from="~/components/form/button-toggle" />
 <can-import from="~/components/form" />
 
 <div class="panel panel-default">
@@ -62,25 +63,25 @@
         <fieldset>
         <input type="hidden" value:bind="./id">
         <div class="form-group">
-            <label class="col-sm-2 control-label">&nbsp;</label>
+            <label class="col-sm-2 control-label">Role</label>
             <div class="col-sm-10">
-            <div class="checkbox">
-                <label class="checkbox-inline">
-                    <input type="checkbox" value:bind="manager"> Manager
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value=""> SMTP
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value=""> IMAP
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value=""> POP3
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" value=""> Siev
-                </label>
+                <form-button-toggle text:from="'Manager'" toggle:from="manager" />
             </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Protocols</label>
+            <div class="col-sm-10">
+                <div class="btn-group">
+                    <form-button-toggle text:from="'SMTP'" toggle:from="smtp" />
+                    <form-button-toggle text:from="'IMAP'" toggle:from="imap" />
+                    <form-button-toggle text:from="'POP3'" toggle:from="pop3" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Filter</label>
+            <div class="col-sm-offset-2 col-sm-10">
+                <form-button-toggle text:from="'Sieve'" toggle:from="sieve" />
             </div>
         </div>
         <div class="form-group">

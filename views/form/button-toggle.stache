@@ -1,0 +1,8 @@
+<div class="btn-group btn-group-toggle">
+    <button type="button" class="btn {{#if Toggle()}}btn-success{{else}}btn-default btn-inactive{{/if}}">
+        {{#if Toggle()}}<span class="glyphicon glyphicon-ok"></span>{{else}}{{text}}{{/if}}
+    </button>
+    <button type="button" class="btn {{^if Toggle()}}btn-danger{{else}}btn-default btn-inactive{{/if}}">
+        {{^if Toggle()}}<span class="glyphicon glyphicon-remove"></span>{{else}}{{text}}{{/if}}
+    </button>
+</div>
