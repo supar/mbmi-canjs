@@ -1,9 +1,9 @@
 import fixture from 'can-fixture';
 
     var loginData =  [
-            { id: 1, name: "Менеджер 1", login: "some_1", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-1", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
-            { id: 2, name: "Менеджер 2", login: "some_2", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-2", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
-            { id: 3, name: "Менеджер 3", login: "some_3", domainname: "domain.com", password: "123", jwt: "asdfqwerdzsflkewu-3", smtp: 1, pop3: 0, imap: 1, sieve: 1, manager: 1 },
+            { id: 1, name: "Менеджер 1", login: "some_1", domain: 1, domainname: "domain.com", password: "123", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
+            { id: 2, name: "Менеджер 2", login: "some_2", domain: 1, domainname: "domain.com", password: "123", smtp: 1, pop3: 0, imap: 1, sieve: 0, manager: 0 },
+            { id: 3, name: "Менеджер 3", login: "some_3", domain: 1, domainname: "domain.com", password: "123", smtp: 1, pop3: 0, imap: 1, sieve: 1, manager: 1 },
         ],
 
         accessData = [
@@ -60,13 +60,21 @@ import fixture from 'can-fixture';
 
         if(String(authHeader).substr(7) === authkey) {
             for(var i in loginData) {
-                if(loginData[i].jwt == authkey) {
+                if(JWTKEY(loginData[i].id) == authkey) {
                     return loginData[i];
                 }
             }
         }
 
         return false;
+    }
+
+    function JWTKEY(suffix) {
+        if(suffix == '') {
+            return;
+        }
+
+        return 'JWT-KEY-' + suffix;
     }
 
     function AuthError(msg) {
@@ -197,8 +205,10 @@ fixture({
             });
         }
     },
-    'GET user/me': function(request, response) {
+    'GET user/{id}': function(request, response) {
         var auth = Authorize(request),
+            id = request.data.id,
+            flt = function() {},
             data = null;
 
         try {
@@ -206,21 +216,140 @@ fixture({
                 throw new AuthError();
             }
 
-            for(var i in loginData) {
-                if(loginData[i]["jwt"] == auth.jwt) {
-                    data = loginData[i]
+            if(id == 'me') {
+                data = auth;
+            }
+            else if(parseInt(id) > 0) {
+                flt = function(v) {
+                    return v.id == id
                 }
+
+                data = loginData.find(flt);
+            } else {
+                throw new RespError('Unknown item');
             }
 
             if(data == null) {
                 throw new AuthError()
             }
-            response(200, {
-                success: true,
-                data: auth
-            });
         } catch(err) {
             response(err.code, {
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });
+    },
+    'PUT user/{id}': function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            done = false,
+            domain;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['id']) {
+                throw new RespError('Unknown item');
+            }
+
+            if(!data['login']) {
+                throw new RespError('Empty email login value');
+            }
+
+            if(!data['domain']) {
+                throw new RespError('Empty email domain value');
+            }
+
+            domain = transportData.find(function(v) {
+                return (v.id == data.domain);
+            });
+
+            if(!domain) {
+                throw new RespError('Unknown domain');
+            }
+
+            data.domainname = domain.domain
+
+            for(var i in loginData) {
+                if(loginData[i].id == data.id) {
+                    $.extend(loginData[i], data);
+
+                    done = true;
+                    break;
+                }
+            }
+
+            if(!done) {
+                throw new Error('Unknown item');
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });
+    },
+    'POST user': function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            maxId = 0,
+            domain;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['login']) {
+                throw new RespError('Empty email login value');
+            }
+
+            if(!data['domain']) {
+                throw new RespError('Empty email domain value');
+            }
+
+            domain = transportData.find(function(v) {
+                return (v.id == data.domain);
+            });
+
+            if(!domain) {
+                throw new RespError('Unknown domain');
+            }
+
+            data.domainname = domain.domain
+
+            for(var i in loginData) {
+                maxId = loginData[i].id > maxId ? loginData[i].id : maxId;
+            }
+
+            maxId++;
+
+            data['id'] = maxId;
+            loginData.push(data);
+
+            response(200, {
+                success: true,
+                data: data
+            });
+        }
+        catch (err) {
+            response(err.code, {
+                success: false,
                 error: err.message
             });
         }
@@ -242,7 +371,7 @@ fixture({
             for(var i in loginData) {
                 if([loginData[i].login, loginData[i].domainname].join('@') == data['email'] && loginData[i].password == data['password']) {
                     authSess = {
-                        jwt: loginData[i].jwt
+                        jwt: JWTKEY(loginData[i].id)
                     };
                     break;
                 }
