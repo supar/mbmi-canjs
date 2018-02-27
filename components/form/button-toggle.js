@@ -7,24 +7,24 @@ export default component.extend({
     view: stache,
     viewModel: {
         text: { type: 'string', value: 'Undefined' },
-        state: { type: 'boolean', value: false }
+        value: { type: 'boolean', value: false }
     },
     events: {
         '{element} button:not(.btn-inactive) click': function(el, ev) {
             var model = this.viewModel,
-                toggle = !(model.state);
+                toggle = !(model.value);
 
             model.assign({
-                state: toggle
+                value: toggle
             });
         },
-        '{viewModel} state': function(model, ev, value, old) {
+        '{viewModel} value': function(model, ev, value, old) {
             this.viewModel.dispatch('toggle', [ value, old ])
         }
     },
     helpers: {
         Toggle: function() {
-            return !!this.get('state');
+            return !!this.get('value');
         }
     }
 });
