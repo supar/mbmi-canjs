@@ -1,6 +1,7 @@
 <can-import from="~/components/grid" />
 <can-import from="~/components/form/autocomplete" />
 <can-import from="~/components/form/button-toggle" />
+<can-import from="~/components/form/remove-item" />
 <can-import from="~/components/form" />
 
 <div class="panel panel-default">
@@ -12,11 +13,12 @@
         <div class="alert alert-danger" role="alert">{{error}}</div>
     </div>
 {{/if}}
+{{#if isGrid()}}
 <div class="panel-body">
     <div role="toolbar">
         <div class="input-group" role="group">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-primary {{#if isForm()}}disabled{{/if}}" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
+                <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
             </span>
             <form-autocomplete value:to="search">
                 <can-template name="input"><input type="text" class="form-control"></can-template>
@@ -25,7 +27,6 @@
     </div>
 </div>
 <div class="panel-body">
-{{#if isGrid()}}
     <panel-grid api:from="api" error:to="error">
         <can-template name="grid-head">
             <thead>
@@ -58,7 +59,7 @@
     </panel-grid>
 {{/if}}
 {{#if isForm()}}
-    <panel-form panel:from="this">
+    <panel-form panel:from="this" class:from="'panel-body'">
         <can-template name="form-body">
         <fieldset>
         <input type="hidden" value:bind="./id">
@@ -77,14 +78,16 @@
                 </div>
             </div>
             <div class="col-sm-5">
-                <select class="form-control"><option>lanbilling.ru</option></select>
+                <select class="form-control" value:bind="domain">
+                {{#../transport}}<option value="{{./id}}" {{#eq(./id, ../domain)}}selected{{/eq}}>{{./domain}}</option>{{/../transport}}
+                </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Password</label>
             <div class="col-sm-10">
                 <div class="input-group">
-                    <input type="input" class="form-control" placeholder="Password" value:bind="pass">
+                    <input type="input" class="form-control" placeholder="Password" value:bind="password">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-random"></span></button>
                     </span>
@@ -92,25 +95,25 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Role</label>
-            <div class="col-sm-10">
-                <form-button-toggle text:from="'Manager'" toggle:from="manager" />
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-2 control-label">Protocols</label>
             <div class="col-sm-10">
                 <div class="btn-group">
-                    <form-button-toggle text:from="'SMTP'" toggle:from="smtp" />
-                    <form-button-toggle text:from="'IMAP'" toggle:from="imap" />
-                    <form-button-toggle text:from="'POP3'" toggle:from="pop3" />
+                    <form-button-toggle text:from="'SMTP'" value:from="smtp" />
+                    <form-button-toggle text:from="'IMAP'" value:from="imap" />
+                    <form-button-toggle text:from="'POP3'" value:from="pop3" />
                 </div>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Filter</label>
-            <div class="col-sm-offset-2 col-sm-10">
-                <form-button-toggle text:from="'Sieve'" toggle:from="sieve" />
+            <div class="col-sm-10">
+                <form-button-toggle text:from="'Sieve'" value:from="sieve" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Role</label>
+            <div class="col-sm-10">
+                <form-button-toggle text:from="'Manager'" value:from="manager" />
             </div>
         </div>
         <div class="form-group">
