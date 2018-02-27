@@ -11,9 +11,12 @@ import ajax from 'util/ajax-setup';
 import tpl from '../views/user.stache!';
 import panel from '../models/panel';
 
-let user = map.extend({
+let User = map.extend({
     id: 'number',
+    name: 'string',
     login: 'string',
+    password: 'string',
+    domain: 'number',
     domainname: 'string',
     smtp: 'number',
     pop3: 'number',
@@ -22,15 +25,15 @@ let user = map.extend({
     manager: 'number'
 });
 
-user.List = list.extend({
-    '#': user
+User.List = list.extend({
+    '#': User
 });
 
 connect(
     [ constructor, dataUrl, parse, baseMap, ajax ],
     {
-        Map: user,
-        List: user.List,
+        Map: User,
+        List: User.List,
         parseInstanceProp: 'data',
         url: {
             createData: 'user',
@@ -38,12 +41,45 @@ connect(
             getData: 'user/{id}',
             getListData: 'users',
             updateData: "user/{id}",
+        },
+        instance: function(data) {
+            return new User();
+        }
+    });
+
+// Domain transport model
+let Transport = map.extend({
+    id: 'number',
+    domain: 'string',
+});
+
+Transport.List = list.extend({
+    '#': Transport
+});
+
+connect(
+    [ constructor, dataUrl, parse, baseMap, ajax ],
+    {
+        Map: Transport,
+        List: Transport.List,
+        parseInstanceProp: 'data',
+        url: {
+            getListData: 'transports',
         }
     });
 
 // Extend default panel
 let panelExt = panel.extend({
     search: 'string',
+    transport: {
+        get: function(last, setAttr) {
+            var model = this;
+
+            return Transport.getList().then(function(response) {
+                setAttr(response);
+            });
+        }
+    }
 });
 
 export default component.extend({
@@ -51,7 +87,7 @@ export default component.extend({
     view: tpl,
     viewModel: function(attr, parentScope) {
         return new panelExt({
-            api: user,
+            api: User,
             title: "User mail box"
         });
     },
