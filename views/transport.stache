@@ -44,7 +44,6 @@
 <panel-form panel:from="this">
     <can-template name="form-body">
     <fieldset>
-    <input type="hidden" value:bind="./id">
     <div class="form-group">
         <label for="inputClient" class="col-sm-4 control-label">Domain name</label>
         <div class="col-sm-4">

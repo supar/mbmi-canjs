@@ -69,7 +69,6 @@
         <panel-form panel:from="this" this:to="form" class:from="'panel-body'">
             <can-template name="form-body">
             <fieldset>
-            <input type="hidden" value:bind="id">
             <div class="form-group">
                 <label for="inputAlias" class="col-sm-2 control-label">Alias</label>
                 <div class="col-sm-10">
