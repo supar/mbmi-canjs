@@ -7,7 +7,7 @@ var project = path.basename(path.dirname(__dirname));
 
 var build = function() {
     var config = {
-            main: path.join(project, 'index'),
+            main: project,
             config: __dirname + "/../package.json!npm",
             npmAlgorithm: "flat",
             map: {},
@@ -22,12 +22,13 @@ var build = function() {
         minify: true,
         debug: true,
         quiet: false,
-        bundleSteal: true,
+        bundleSteal: false,
+        bundleAssets: true,
         removeDevelopmentCode: true,
-        dest: 'build',
+        dest: 'build'
     }).then(function() {
         fs.createReadStream(__dirname + '/../index_prod.html')
-            .pipe(fs.createWriteStream(__dirname + '/../build/bundles/index.html'));
+            .pipe(fs.createWriteStream(__dirname + '/../build/index.html'));
     });
 };
 
