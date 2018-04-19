@@ -57,8 +57,12 @@
             </can-template>
             <can-template name="grid-body-row">
             {{^isPending}}{{#this}}
-            <tr on:click="route({{id}}, %scope)">
-                <td data-title="Recepient">{{recipient}}</td>
+            <tr>
+                <td data-title="Recepient">
+                    <button type="button" class="btn btn-link" on:click="route({{id}}, %scope)">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button> {{recipient}}
+                </td>
                 <td data-title="Comment">{{comment}}</td>
             </tr>
             {{/this}}{{/isPending}}

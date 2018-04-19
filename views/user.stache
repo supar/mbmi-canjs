@@ -44,14 +44,17 @@
         <can-template name="grid-body-row">
         {{^isPending}}
         {{#this}}
-        <tr on:click="route({{id}}, %scope)">
+        <tr>
             <td data-title="ID">{{id}}</td>
-            <td data-title="Name">{{name}}</td>
+            <td data-title="Name">
+                <button type="button" class="btn btn-link" on:click="route({{id}}, %scope)">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button> {{name}}</td>
             <td data-title="Login">{{fullLogin}}</td>
-            <td data-title="SMTP">{{smtp}}</td>
-            <td data-title="POP3">{{pop3}}</td>
-            <td data-title="IMAP">{{imap}}</td>
-            <td data-title="Sieave">{{sieve}}</td>
+            <td data-title="SMTP"><span class="glyphicon glyphicon-{{#smtp}}ok{{else}}remove{{/smtp}}"></span></td>
+            <td data-title="POP3"><span class="glyphicon glyphicon-{{#pop3}}ok{{else}}remove{{/pop3}}"></span></td>
+            <td data-title="IMAP"><span class="glyphicon glyphicon-{{#imap}}ok{{else}}remove{{/imap}}"></span></td>
+            <td data-title="Sieave"><span class="glyphicon glyphicon-{{#sieve}}ok{{else}}remove{{/sieve}}"></span></td>
         </tr>
         {{/this}}
         {{/isPending}}
