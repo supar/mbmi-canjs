@@ -68,17 +68,48 @@ connect(
         }
     });
 
+// Password
+let Password = connect(
+    [ constructor, dataUrl, ajax ],
+    {
+        instance: function(data) {
+            return data
+        },
+        url: {
+            getListData: 'password'
+        }
+    });
+
 // Extend default panel
 let panelExt = panel.extend({
     search: 'string',
+    form: 'observable',
+    Password: {
+        set: function(last, setAttr) {
+            var model = this;
+
+            return Password.getList().then(function(response) {
+                setAttr(response)
+
+                if(response.length && model.form) {
+                    model.form.dispatch('modify', [ {
+                        password: response.shift()
+                    } ])
+                }
+            }, model.onError(model));
+        }
+    },
     transport: {
         get: function(last, setAttr) {
             var model = this;
 
             return Transport.getList().then(function(response) {
-                setAttr(response);
-            });
+                setAttr(response)
+            }, model.onError(model));
         }
+    },
+    getPassword: function() {
+        this.assign({ Password: null });
     }
 });
 
