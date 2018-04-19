@@ -864,4 +864,30 @@ fixture({
             data: items
         });    
     },
+    'GET password': function(request, response) {
+        var auth = Authorize(request),
+            items = [];
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            for (var i = 0; i < 5; i++) {
+                items.push(Math.random().toString(36).substring(2));
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+        
+        response(200, {
+            success: true,
+            data: items
+        });    
+    },
 });
