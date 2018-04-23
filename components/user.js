@@ -84,6 +84,9 @@ let Password = connect(
 let panelExt = panel.extend({
     search: 'string',
     form: 'observable',
+    getFilter: function() {
+        return (this.getRouteParam('flt') || 'active');
+    },
     Password: {
         set: function(last, setAttr) {
             var model = this;
@@ -106,6 +109,21 @@ let panelExt = panel.extend({
             return Transport.getList().then(function(response) {
                 setAttr(response)
             }, model.onError(model));
+        }
+    },
+    userFilter: {
+        get: function() {
+            var mode = 1;
+
+            switch(this.getFilter()) {
+                case 'active': mode = 1; break;
+                case 'off': mode = 2; break;
+                default: mode = 0;
+            }
+
+            return {
+                mode: mode
+            };
         }
     },
     getPassword: function() {
@@ -134,6 +152,15 @@ export default component.extend({
         },
         isForm: function() {
             return (this.id() >= 0)
+        },
+        isList: function(mode, options) {
+            var flt = this.getFilter();
+
+            if (mode == flt) {
+                return options.fn();
+            }
+
+            return options.inverse();
         }
     }
 });

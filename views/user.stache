@@ -14,20 +14,23 @@
     </div>
 {{/if}}
 {{#if isGrid()}}
-<div class="panel-body">
-    <div role="toolbar">
-        <div class="input-group" role="group">
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
-            </span>
-            <form-autocomplete value:to="search">
-                <can-template name="input"><input type="text" class="form-control"></can-template>
-            </form-autocomplete>
-        </div>
+<div class="panel-body panel-filters">
+    <ul class="nav nav-tabs">
+        <li class="{{#isList('all')}}active{{/isList}}"><a href="{{routeUrl(flt='all',true)}}">All</a></li>
+        <li class="{{#isList('active')}}active{{/isList}}"><a href="{{routeUrl(flt='active',true)}}">Active</a></li>
+        <li class="{{#isList('off')}}active{{/isList}}"><a href="{{routeUrl(flt='off',true)}}">Offline</a></li>
+    </ul>
+    <div class="input-group" role="group">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-primary" on:click="route(0)"><i class="glyphicon glyphicon-plus"></i></button>
+        </span>
+        <form-autocomplete value:to="search">
+            <can-template name="input"><input type="text" class="form-control"></can-template>
+        </form-autocomplete>
     </div>
 </div>
 <div class="panel-body">
-    <panel-grid api:from="api" error:to="error">
+    <panel-grid api:from="api" filter:from="userFilter" error:to="error">
         <can-template name="grid-head">
             <thead>
                 <tr>
