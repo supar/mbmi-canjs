@@ -34,6 +34,13 @@ export default map.extend(
         id: function() {
             return route.data.get('itemId');
         },
+        getRouteParam: function(item) {
+            if(item) {
+                return route.data.get(item);
+            }
+
+            return route.data
+        },
         route: function(id) {
             var id = id || (typeof id == "number" ? 0 : null);
         
