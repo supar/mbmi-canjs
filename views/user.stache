@@ -17,7 +17,7 @@
 <div class="panel-body panel-filters">
     <ul class="nav nav-tabs">
         <li class="{{#isList('all')}}active{{/isList}}"><a href="{{routeUrl(flt='all',true)}}">All</a></li>
-        <li class="{{#isList('active')}}active{{/isList}}"><a href="{{routeUrl(flt='active',true)}}">Active</a></li>
+        <li class="{{#isList('on')}}active{{/isList}}"><a href="{{routeUrl(flt='on',true)}}">Active</a></li>
         <li class="{{#isList('off')}}active{{/isList}}"><a href="{{routeUrl(flt='off',true)}}">Offline</a></li>
     </ul>
     <div class="input-group" role="group">

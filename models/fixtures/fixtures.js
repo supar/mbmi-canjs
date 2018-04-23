@@ -188,15 +188,15 @@ fixture({
     'GET users': function(request, response) {
         var auth = Authorize(request),
             items = [],
-            mode = parseInt(request.data.mode),
+            mode = request.data.mode || 'all',
             start = request.data['offset'] || 0,
             end = start + (request.data['limit'] || loginData.length),
 
             flt = function(v) {
                 switch(mode) {
-                    case 0: return true;
-                    case 1: return (v.smtp || v.imap || v.pop3);
-                    case 2: return (!v.smtp && !v.imap && !v.pop3);
+                    case 'all': return true;
+                    case 'on': return (v.smtp || v.imap || v.pop3);
+                    case 'off': return (!v.smtp && !v.imap && !v.pop3);
                 }
 
                 return false;
