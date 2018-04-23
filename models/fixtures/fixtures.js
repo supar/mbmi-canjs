@@ -187,17 +187,31 @@ function Aliases(request, response) {
 fixture({
     'GET users': function(request, response) {
         var auth = Authorize(request),
+            items = [],
+            mode = parseInt(request.data.mode),
             start = request.data['offset'] || 0,
-            end = start + (request.data['limit'] || loginData.length);
+            end = start + (request.data['limit'] || loginData.length),
+
+            flt = function(v) {
+                switch(mode) {
+                    case 0: return true;
+                    case 1: return (v.smtp || v.imap || v.pop3);
+                    case 2: return (!v.smtp && !v.imap && !v.pop3);
+                }
+
+                return false;
+            };
 
         try {
             if(auth == false) {
                 throw new AuthError();
             }
 
+            items = loginData.filter(flt);
+
             response(200, {
-                count: loginData.length,
-                data: loginData.slice(start, end)
+                count: items.length,
+                data: items.slice(start, end)
             });
         } catch(err) {
             response(err.code, {
