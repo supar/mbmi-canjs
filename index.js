@@ -45,6 +45,10 @@ let AppModel = map.extend({
         serialize: true,
         type: 'string'
     },
+    flt: {
+        serialize: true,
+        type: 'string'
+    },
     session: Object,
 
     initSession: function() {
