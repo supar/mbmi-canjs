@@ -1,6 +1,6 @@
 {
     "name": "mbmi-canjs",
-    "version": "0.3.0",
+    "version": "0.3.2",
     "description": "",
     "main": "index.js",
     "dependencies": {
@@ -11,7 +11,7 @@
         "can-route": "3.2.4",
         "can-stache": "3.13.3",
         "jquery": "3.2.1",
-        "steal": "^1.5.13"
+        "steal": "^1.11.6"
     },
     "devDependencies": {
         "can-fixture": "1.1.1",

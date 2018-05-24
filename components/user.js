@@ -114,6 +114,7 @@ let panelExt = panel.extend({
     userFilter: {
         get: function() {
             return {
+                query: this.search,
                 mode: this.getListMode()
             };
         }
