@@ -1,20 +1,21 @@
 {
     "name": "mbmi-canjs",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "",
     "main": "index.js",
     "dependencies": {
         "bootstrap": "3.3.7",
-        "can-component": "3.3.6",
-        "can-connect": "1.5.10",
-        "can-define": "1.5.4",
-        "can-route": "3.2.4",
-        "can-stache": "3.13.3",
-        "jquery": "3.2.1",
-        "steal": "^1.11.6"
+        "can-component": "3.3.10",
+        "can-connect": "1.5.18",
+        "can-define": "1.5.7",
+        "can-route": "3.3.4",
+        "can-stache": "3.15.0",
+        "can-util": "3.14.0",
+        "jquery": "^3.2.1"
     },
     "devDependencies": {
-        "can-fixture": "1.1.1",
+        "can-fixture": "1.2.2",
+        "steal": "^1.11.6",
         "steal-tools": "^1.11.7",
         "steal-css": "1.2.5",
         "steal-less": "1.2.0",
