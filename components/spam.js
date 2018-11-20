@@ -37,7 +37,8 @@ let panelExt = panel.extend({
     filter: {
         type: 'observable',
         Value: map.extend({
-            sort: { type: 'string', value: 'index' }
+            sort: { type: 'string', value: 'index' },
+            dir: { type: 'string', value: 'desc' }
         })
     }
 });
@@ -48,7 +49,7 @@ export default component.extend({
     viewModel: function(attr, parentScope) {
         return new panelExt({
             api: spam,
-            title: "Mail spams"
+            title: "Mail spams index"
         });
     },
     helpers: {
