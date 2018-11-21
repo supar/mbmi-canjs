@@ -1,4 +1,4 @@
-<div class="panel" masked>
+<div class="panel panel-overflow" masked>
     {{^listView}}
     <div class="panel-body table-wrap">
     <table class="table table-data table-responsive-condense">
