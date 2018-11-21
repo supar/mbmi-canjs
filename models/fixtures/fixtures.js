@@ -51,6 +51,9 @@ import fixture from 'can-fixture';
             {id: 11, alias: "team_a@domain.com", recipient: "a_group@intenet.com", comment: "Team A" },
             {id: 12, alias: "team_b@domain.com", recipient: "b_group@intenet.com", comment: "Team B" },
             {id: 13, alias: "team_cb@domain.com", recipient: "c_group@intenet.com", comment: "Team C" },
+            {id: 14, alias: "flash@local.local", recipient: "iron@intenet.internet", comment: "" },
+            {id: 14, alias: "insta@local.local", recipient: "pre@intenet.internet", comment: "" },
+            {id: 14, alias: "bro@local.local", recipient: "brew@intenet.internet", comment: "" },
         ];
 
 
