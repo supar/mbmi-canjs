@@ -80,6 +80,29 @@ let Password = connect(
         }
     });
 
+// Service statistics
+let ServiceStat = map.extend({
+    service: 'string',
+    ip: 'string',
+    updated: 'string',
+    attempt: 'number',
+});
+
+ServiceStat.List = list.extend({
+    '#': ServiceStat
+});
+
+connect(
+    [ constructor, dataUrl, parse, baseMap, ajax ],
+    {
+        Map: ServiceStat,
+        List: ServiceStat.List,
+        parseInstanceProp: 'data',
+        url: {
+            getListData: 'servicestat',
+        }
+    });
+
 // Extend default panel
 let panelExt = panel.extend({
     search: 'string',
@@ -119,6 +142,16 @@ let panelExt = panel.extend({
             };
         }
     },
+    serviceStatFilter: {
+        get: function() {
+            var model = this;
+
+            return {
+                uid: model.id(),
+                group: 'service'
+            };
+        }
+    },
     getPassword: function() {
         this.assign({ Password: null });
     }
@@ -130,6 +163,7 @@ export default component.extend({
     viewModel: function(attr, parentScope) {
         return new panelExt({
             api: User,
+            serviceStat: ServiceStat,
             title: "User mail box"
         });
     },

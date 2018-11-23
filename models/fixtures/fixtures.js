@@ -54,6 +54,11 @@ import fixture from 'can-fixture';
             {id: 14, alias: "flash@local.local", recipient: "iron@intenet.internet", comment: "" },
             {id: 14, alias: "insta@local.local", recipient: "pre@intenet.internet", comment: "" },
             {id: 14, alias: "bro@local.local", recipient: "brew@intenet.internet", comment: "" },
+        ],
+    
+        serviceStatData = [
+            {"uid":1,"service":"imap","ip":"","updated":"2018-11-16T12:17:09+03:00","attempt":1},
+            {"uid":2,"service":"imap","ip":"10.0.0.1","updated":"2017-10-10 11:10:00","attempt":12}
         ];
 
 
@@ -906,5 +911,40 @@ fixture({
             success: true,
             data: items
         });    
+    },
+    'GET servicestat': function(request, response) {
+        var auth = Authorize(request),
+            args = request.data || {},
+            start = args.offset || 0,
+            end = start + (args.limit || serviceStatData.length),
+            uid = args.uid || 0,
+            items = [];
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(uid > 0) {
+                for(var i in serviceStatData) {
+                    if(uid == serviceStatData[i].uid) {
+                        items.push(serviceStatData[i])
+                    }
+                }
+            } else {
+                items = serviceStatData;
+            }
+
+            response(200, {
+                count: items.length,
+                data: items.slice(start, end)
+            });
+        }
+        catch(err) {
+            response(err.code, {
+                error: err.message,
+                success: false
+            });
+        }
     },
 });

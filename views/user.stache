@@ -131,6 +131,28 @@
             </div>
         </div>
         </fieldset>
+        <panel-grid api:from="serviceStat" filter:from="serviceStatFilter" pagination="false">
+            <can-template name="grid-head">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>IP</th>
+                        <th>Last</th>
+                    </tr>
+                </thead>
+            </can-template>
+            <can-template name="grid-body-row">
+            {{^isPending}}
+            {{#this}}
+            <tr>
+                <td data-title="Service">{{service}}</td>
+                <td data-title="IP">{{ip}}</td>
+                <td data-title="Las">{{updated}}</td>
+            </tr>
+            {{/this}}
+            {{/isPending}}
+            </can-template>
+        </panel-grid>
         {{^if isNew()}}<form-remove-item
             on:destroy="destroy(../onSuccess, ../onError)"
             class:from="'panel-indent'"
