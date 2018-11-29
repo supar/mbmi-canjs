@@ -1,6 +1,6 @@
 {
     "name": "mbmi-canjs",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "",
     "main": "index.js",
     "dependencies": {
@@ -10,6 +10,7 @@
         "can-define": "1.5.7",
         "can-route": "3.3.4",
         "can-stache": "3.15.0",
+        "can-stache-converters": "3.3.1",
         "can-util": "3.14.0",
         "jquery": "^3.2.1"
     },

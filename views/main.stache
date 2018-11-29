@@ -42,6 +42,9 @@
         {{#routing 'alias'}}
             <can-import from="~/components/alias">{{#isResolved}}<alias-panel />{{/isResolved}}</can-import>
         {{/routing}}
+        {{#routing 'bcc'}}
+            <can-import from="~/components/bcc">{{#isResolved}}<bcc-panel />{{/isResolved}}</can-import>
+        {{/routing}}
         {{#routing 'access'}}
             <can-import from="~/components/smtp-access">{{#isResolved}}<access-panel />{{/isResolved}}</can-import>
         {{/routing}}

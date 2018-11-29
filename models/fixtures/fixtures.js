@@ -59,6 +59,10 @@ import fixture from 'can-fixture';
         serviceStatData = [
             {"uid":1,"service":"imap","ip":"","updated":"2018-11-16T12:17:09+03:00","attempt":1},
             {"uid":2,"service":"imap","ip":"10.0.0.1","updated":"2017-10-10 11:10:00","attempt":12}
+        ],
+    
+        bccData = [
+            {id: 1, sender: "", recipient: "some_4@domain.com", copy: "foo@domain.com"}
         ];
 
 
@@ -947,4 +951,207 @@ fixture({
             });
         }
     },
+    "GET bccs": function(request, response) {
+        var auth = Authorize(request),
+            args = request.data || {},
+            start = args.offset || 0,
+            end = start + (args.limit || bccData.length),
+            uid = args.uid || 0,
+            search = args.query || '',
+            items = [];
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(search) {
+                if(search) {
+                    search = new RegExp('^' + search);
+                }
+                for(var i in bccData) {
+                    if(search.test(bccData[i].sender) || search.test(bccData[i].recipient) || search.test(bccData[i].copy)) {
+                        items.push(bccData[i])
+                    }
+                }
+            } else {
+                items = bccData;
+            }
+
+            response(200, {
+                count: items.length,
+                data: items.slice(start, end)
+            });
+        }
+        catch(err) {
+            response(err.code, {
+                error: err.message,
+                success: false
+            });
+        }
+    },
+    "GET bcc/{id}": function(request, response) {
+        var auth = Authorize(request),
+            args = request.data || {},
+            flt = function() {},
+            id = args.id || 0,
+            data = null;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(parseInt(id) > 0) {
+                flt = function(v) {
+                    return v.id == id
+                }
+
+                data = bccData.find(flt);
+            } else {
+                throw new RespError('Unknown item');
+            }
+
+            if(data == null) {
+                throw new AuthError()
+            }
+        } catch(err) {
+            response(err.code, {
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });
+    },
+    "POST bcc": function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            maxId = 0;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['sender'] && !data['recipient']) {
+                if(!data['sender']) {
+                    throw new RespError('Empty sender value');
+                }
+                if(!data['recipient']) {
+                    throw new RespError('Empty recipient value');
+                }
+            }
+
+            if(!data['copy']) {
+                throw new RespError('Empty copy to value');
+            }
+
+            for(var i in bccData) {
+                maxId = bccData[i].id > maxId ? bccData[i].id : maxId;
+            }
+            
+            maxId++;
+
+            bccData.push({
+                id: maxId,
+                sender: data['sender'] || '',
+                recipient: data['recipient'] || '',
+                copy: data['copy'] || '',
+                comment: data['comment'] || ''
+            });
+
+            data['id'] = maxId;
+
+            response(200, {
+                success: true,
+                data: data
+            });    
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+    },
+    "PUT bcc/{id}": function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            if(!data['id']) {
+                throw new RespError('Unknown item');
+            }
+
+            for(var i in bccData) {
+                if(bccData[i].id == data.id) {
+                    bccData[i] = {
+                        id: data['id'],
+                        sender: data['sender'] || '',
+                        recipient: data['recipient'] || '',
+                        copy: data['copy']
+                    };
+                    done = true;
+                    break;
+                }
+            }
+
+            if(!done) {
+                throw new Error('Unknown item');
+            }
+        } catch(err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+
+            return;
+        }
+
+        response(200, {
+            success: true,
+            data: data
+        });    
+    },
+    "DELETE bcc/{id}": function(request, response) {
+        var auth = Authorize(request),
+            data = request.data,
+            id = data.id,
+            done = false;
+
+        try {
+            if(!auth) {
+                throw new AuthError();
+            }
+
+            for(var i in bccData) {
+                if(bccData[i].id == id) {
+                    bccData.splice(i, 1);
+                    break;
+                }
+            }
+
+            response(200, {
+                success: true,
+                data: data
+            });
+        }
+        catch (err) {
+            response(err.code, {
+                success: false,
+                error: err.message
+            });
+        }
+    }
 });

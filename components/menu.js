@@ -34,6 +34,7 @@ export default component.extend({
                 { id: 'home', name: 'Home', role: 0 },
                 { id: 'user', name: 'User Mail box', role: 1 },
                 { id: 'alias', name: 'Virtual box (alias)', role: 1 },
+                { id: 'bcc', name: 'BCC', role: 1 },
                 { id: 'access', name: 'SMTP restrictions', role: 1 },
                 { id: 'spam', name: 'Spam', role: 1 },
                 { id: 'transport', name: 'Transport', role: 1 }

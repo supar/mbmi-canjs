@@ -5,6 +5,7 @@ import './less/application.less!';
 import map from 'can-define/map/map';
 import route from 'can-route';
 import 'can-stache/helpers/route';
+import 'can-stache-converters';
 
 //!steal-remove-start
 import 'models/fixtures/fixtures';
